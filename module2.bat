@@ -17,7 +17,7 @@ az group show --resource-group %PERMANENT_RG%
 
 az group list --query "[?contains(name,'%PERMANENT_RG%')]" --output table
 
-FOR /F "usebackq tokens=* delims=" %A IN (`az group show --resource-group %PERMANENT_RG% --query "id" -o tsv`) DO ( SET RESOURCE_RG_ID=%A )
+FOR /F "usebackq tokens=* delims=" %A IN (`az group show --resource-group %PERMANENT_RG% --query "id" --output tsv`) DO ( SET RESOURCE_RG_ID=%A )
 
 az group delete --resource-group %TEMPORARY_RG% --no-wait --yes
 
@@ -30,3 +30,9 @@ az acr create --name %MODULE2_ACR% --resource-group %PERMANENT_RG% --sku Basic -
 az resource list --resource-group %PERMANENT_RG% --output table
 
 az acr credential show --name %MODULE2_ACR% --resource-group %PERMANENT_RG% --output yaml
+
+az acr repository list --name %MODULE2_ACR% --output table
+
+FOR /F "usebackq tokens=* delims=" %A IN (`az acr repository list --name %MODULE2_ACR% --output tsv`) DO ( SET ACR_REPOSITORY_NAME=%A )
+
+az acr repository show-tags --name %MODULE2_ACR% --repository %ACR_REPOSITORY_NAME% --output table
