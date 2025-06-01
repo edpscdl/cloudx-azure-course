@@ -1,8 +1,8 @@
 name: CI/CD to Azure Container Registry
 
 env:
-  AZURE_CONTAINER_REGISTRY: module2acr870.azurecr.io
-  AZURE_CONTAINER_REGISTRY_USERNAME: module2acr870
+  AZURE_CONTAINER_REGISTRY: module2acr451.azurecr.io
+  AZURE_CONTAINER_REGISTRY_USERNAME: module2acr451
   IMAGE_NAME: webapp
 
 on:
