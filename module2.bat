@@ -36,3 +36,9 @@ az acr repository list --name %MODULE2_ACR% --output table
 FOR /F "usebackq tokens=* delims=" %A IN (`az acr repository list --name %MODULE2_ACR% --output tsv`) DO ( SET ACR_REPOSITORY_NAME=%A )
 
 az acr repository show-tags --name %MODULE2_ACR% --repository %ACR_REPOSITORY_NAME% --output table
+
+az acr repository show-tags --name %MODULE2_ACR% --repository %ACR_REPOSITORY_NAME% --orderby time_desc --output table
+
+FOR /F "usebackq tokens=* delims=" %A IN (`az acr repository show-manifests --name %MODULE2_ACR% --repository %ACR_REPOSITORY_NAME% --orderby time_asc --query "[0].digest" --output tsv`) DO ( SET OLDEST_IMAGE_SHA=%A )
+
+az acr repository delete --name %MODULE2_ACR% --image webapp@%OLDEST_IMAGE_SHA% --yes
