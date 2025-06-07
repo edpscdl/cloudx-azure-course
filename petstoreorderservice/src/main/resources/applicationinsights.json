@@ -1,7 +1,8 @@
 {
   "connectionStringConfiguredAtRuntime": true,
   "role": {
-    "name": "petstoreorderservice"
+    "name": "pet-store-api",
+    "instance": "petstoreorderservice"
   },
   "sampling": {
     "percentage": 100
