@@ -32,7 +32,7 @@ jobs:
           BRANCH_NAME=${BRANCH_NAME//\//-}
           BUILD_NUMBER=$(printf "%04d" $GITHUB_RUN_NUMBER)
           TAG="${BRANCH_NAME}-${BUILD_NUMBER}"
-          echo "::set-output name=tag::$TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Build and Push petstoreapp
         if: ${{ inputs.project == 'petstoreapp' || inputs.project == 'all' }}
