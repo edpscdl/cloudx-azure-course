@@ -34,6 +34,6 @@ runs:
       with:
         appSourcePath: ${{ github.workspace }}/${{ inputs.module-name }}
         acrName: ${{ inputs.azure-acr-registry-name }}
-        containerAppName: '${{ inputs.module-name }}'
+        containerAppName: 'ca-ps-${{ inputs.module-name }}'
         resourceGroup: ${{ inputs.azure-resource-group }}
         imageToBuild: '${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:latest'
