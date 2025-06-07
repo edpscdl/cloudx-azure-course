@@ -7,6 +7,9 @@ inputs:
   branch-name:
     description: 'Name of branch to build'
     required: true
+  tag:
+    description: 'Name of tag to build and push image'
+    required: true
   azure-credentials:
     description: 'Credentials for authentification on Azure'
     required: true
@@ -20,9 +23,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ inputs.branch-name }}
+#    - uses: actions/checkout@v4
+#      with:
+#        ref: ${{ inputs.branch-name }}
 
     - name: Log in to Azure
       uses: azure/login@v2
@@ -36,4 +39,4 @@ runs:
         acrName: ${{ inputs.azure-acr-registry-name }}
         containerAppName: 'ca-ps-${{ inputs.module-name }}'
         resourceGroup: ${{ inputs.azure-resource-group }}
-        imageToBuild: '${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:latest'
+        imageToBuild: '${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:${{ inputs.tag }}'
