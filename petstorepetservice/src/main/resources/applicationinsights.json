@@ -1,7 +1,7 @@
 {
   "connectionStringConfiguredAtRuntime": true,
   "role": {
-    "name": "petstoreorderservice"
+    "name": "petstorepetservice"
   },
   "sampling": {
     "percentage": 100

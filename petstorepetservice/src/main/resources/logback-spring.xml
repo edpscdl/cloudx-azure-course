@@ -13,9 +13,19 @@
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
     </encoder>
-    </appender>
+  </appender>
 
   <logger name="com.chtrembl.petstore.pet" level="INFO" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </logger>
+
+  <logger name="ApplicationInsightsTelemetry" level="INFO" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </logger>
+
+  <logger name="com.microsoft.applicationinsights" level="INFO" additivity="false">
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="FILE"/>
   </logger>
@@ -23,5 +33,5 @@
   <root level="INFO">
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="FILE"/>
-    </root>
+  </root>
 </configuration>
