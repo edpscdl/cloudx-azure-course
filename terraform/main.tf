@@ -105,7 +105,7 @@ module "containerAppEnvironment" {
 module "containerAppPetStoreApp" {
   source = "./modules/containerApp"
 
-  name                            = "${module.naming.app_service_plan.slug}-${local.list_web_app["petstoreapp"]}"
+  name                            = "${module.naming.container_app.name}-${local.list_web_app["petstoreapp"]}"
   resource_group_name             = module.resourceGroup.name
   application_name                = local.list_web_app["petstoreapp"]
   container_app_environment_id    = module.containerAppEnvironment.id
@@ -136,7 +136,7 @@ module "containerAppPetStoreApp" {
 module "containerAppPetStoreOrderService" {
   source = "./modules/containerApp"
 
-  name                            = "${module.naming.app_service_plan.slug}-${local.list_web_services["petstoreorderservice"]}"
+  name                            = "${module.naming.container_app.name}-${local.list_web_services["petstoreorderservice"]}"
   resource_group_name             = module.resourceGroup.name
   application_name                = local.list_web_services["petstoreorderservice"]
   container_app_environment_id    = module.containerAppEnvironment.id
@@ -163,7 +163,7 @@ module "containerAppPetStoreOrderService" {
 module "containerAppPetstorePetService" {
   source = "./modules/containerApp"
 
-  name                            = "${module.naming.app_service_plan.slug}-${local.list_web_services["petstorepetservice"]}"
+  name                            = "${module.naming.container_app.name}-${local.list_web_services["petstorepetservice"]}"
   resource_group_name             = module.resourceGroup.name
   application_name                = local.list_web_services["petstorepetservice"]
   container_app_environment_id    = module.containerAppEnvironment.id
@@ -187,7 +187,7 @@ module "containerAppPetstorePetService" {
 module "containerAppPetStoreProductService" {
   source = "./modules/containerApp"
 
-  name                            = "${module.naming.app_service_plan.slug}-${local.list_web_services["petstoreproductservice"]}"
+  name                            = "${module.naming.container_app.name}-${local.list_web_services["petstoreproductservice"]}"
   resource_group_name             = module.resourceGroup.name
   application_name                = local.list_web_services["petstoreproductservice"]
   container_app_environment_id    = module.containerAppEnvironment.id
