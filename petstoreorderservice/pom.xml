@@ -54,10 +54,6 @@
             <version>${lombok.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.azure.spring</groupId>
-            <artifactId>spring-cloud-azure-starter</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.microsoft.azure</groupId>
             <artifactId>applicationinsights-runtime-attach</artifactId>
             <version>${applicationinsights.version}</version>
