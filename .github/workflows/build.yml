@@ -25,12 +25,22 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
+      - name: Generate new tag
+        id: generate_tag
+        run: |
+          BRANCH_NAME=${GITHUB_REF_NAME:-${GITHUB_HEAD_REF}}
+          BRANCH_NAME=${BRANCH_NAME//\//-}
+          BUILD_NUMBER=$(printf "%04d" $GITHUB_RUN_NUMBER)
+          TAG="${BRANCH_NAME}-${BUILD_NUMBER}"
+          echo "::set-output name=tag::$TAG"
+
       - name: Build and Push petstoreapp
         if: ${{ inputs.project == 'petstoreapp' || inputs.project == 'all' }}
         uses: ./.github/actions/build-and-push-module
         with:
           module-name: petstoreapp
           branch-name: ${{ github.ref_name }}
+          tag: ${{ steps.generate_tag.tag }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           azure-resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure-acr-registry-name: ${{ vars.AZURE_ACR_REGISTRY_NAME }}
@@ -41,6 +51,7 @@ jobs:
         with:
           module-name: petstoreorderservice
           branch-name: ${{ github.ref_name }}
+          tag: ${{ steps.generate_tag.tag }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           azure-resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure-acr-registry-name: ${{ vars.AZURE_ACR_REGISTRY_NAME }}
@@ -51,6 +62,7 @@ jobs:
         with:
           module-name: petstorepetservice
           branch-name: ${{ github.ref_name }}
+          tag: ${{ steps.generate_tag.tag }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           azure-resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure-acr-registry-name: ${{ vars.AZURE_ACR_REGISTRY_NAME }}
@@ -61,6 +73,7 @@ jobs:
         with:
           module-name: petstoreproductservice
           branch-name: ${{ github.ref_name }}
+          tag: ${{ steps.generate_tag.tag }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           azure-resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure-acr-registry-name: ${{ vars.AZURE_ACR_REGISTRY_NAME }}
