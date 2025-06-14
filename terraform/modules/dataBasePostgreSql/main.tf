@@ -32,9 +32,6 @@ resource "azurerm_postgresql_flexible_server" "postgresql" {
 
   zone                   = "1"
 
-  # delegated_subnet_id = null
-  # public_network_access_enabled = true
-
   create_mode = "Default"
 }
 

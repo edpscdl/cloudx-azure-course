@@ -7,3 +7,7 @@ output "env" {
     POSTGRESQL_DATABASE_PASSWORD = azurerm_postgresql_flexible_server.postgresql.administrator_password
   }
 }
+
+output "server_id" {
+  value = azurerm_postgresql_flexible_server.postgresql.id
+}

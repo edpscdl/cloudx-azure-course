@@ -205,3 +205,18 @@ module "containerAppPetStoreProductService" {
     module.postgresql
   ]
 }
+
+resource "azurerm_postgresql_flexible_server_firewall_rule" "containerAppPetStoreProductServiceFirewallRule" {
+  for_each            = toset(module.containerAppPetStoreProductService.outbound_ip_addresses)
+
+  name                = "aps-petstoreproductservice-${each.key}"
+  server_id           = module.postgresql.server_id
+
+  start_ip_address    = each.value
+  end_ip_address      = each.value
+
+  depends_on = [
+    module.containerAppPetStoreProductService,
+    module.postgresql
+  ]
+}
