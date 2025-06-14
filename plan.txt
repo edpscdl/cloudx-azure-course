@@ -1,0 +1,43 @@
+docker run -p 10000:10000 -p 10001:10001 -p 10002:10002 mcr.microsoft.com/azure-storage/azurite
+
+az extension add --name containerapp --upgrade
+az provider register --namespace Microsoft.Web
+az provider register --namespace Microsoft.App
+az provider register --namespace Microsoft.OperationalInsights
+az provider register --namespace Microsoft.AzureTerraform
+
+az extension add --name serviceconnector-passwordless --upgrade
+az extension add --name microsoft-entra-admin
+
+#Run Terraform
+
+az ad sp create-for-rbac \
+    --name "heorhi_utseuski_github_actions" \
+    --json-auth
+
+#Save responce
+
+az role assignment create
+    --assignee <client-id>
+    --role "Container Apps Contributor"
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>
+
+az role assignment create
+    --assignee <client-id>
+    --role "Web Plan Contributor"
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>
+
+az role assignment create
+    --assignee <client-id>
+    --role "Website Contributor"
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>
+
+az role assignment create
+    --assignee <client-id>
+    --role "AcrPush"
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>/providers/Microsoft.ContainerRegistry/registries/<acr-name>
+
+az role assignment create
+    --assignee <client-id>
+    --role "Contributor"
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>/providers/Microsoft.ContainerRegistry/registries/<acr-name>
