@@ -1,3 +1,8 @@
+drop table petstoredb.public.category CASCADE;
+drop table petstoredb.public.tag CASCADE;
+drop table petstoredb.public.product CASCADE;
+drop table petstoredb.public.product_tag CASCADE;
+
 create table petstoredb.public.category
 (
     id                bigserial     not null primary key,
