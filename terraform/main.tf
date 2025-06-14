@@ -18,7 +18,7 @@ module "resourceGroup" {
   source = "./modules/resourceGroup"
 
   name     = module.naming.resource_group.name_unique
-  location = "eastus"
+  location = "centralus"
 
   depends_on = [
     module.naming
@@ -51,6 +51,21 @@ module "applicationInsights" {
     module.naming,
     module.resourceGroup,
     module.logAnalyticsWorkspace
+  ]
+}
+
+module "postgresql" {
+  source = "./modules/dataBasePostgreSql"
+
+  name                = module.naming.postgresql_database.name_unique
+  location            = module.resourceGroup.location
+  resource_group_name = module.resourceGroup.name
+
+  database_name = "petstoredb"
+
+  depends_on = [
+    module.naming,
+    module.resourceGroup
   ]
 }
 
@@ -151,14 +166,17 @@ module "containerAppPetstorePetService" {
   container_registry_login_server        = module.containerRegistry.login_server
   container_registry_admin_username      = module.containerRegistry.admin_username
   container_registry_admin_password      = module.containerRegistry.admin_password
-  enviroment_variables                   = {}
+  enviroment_variables                   = merge(
+    module.postgresql.env
+  )
 
   depends_on = [
     module.naming,
     module.resourceGroup,
     module.applicationInsights,
     module.containerAppEnvironment,
-    module.containerRegistry
+    module.containerRegistry,
+    module.postgresql
   ]
 }
 
@@ -174,13 +192,16 @@ module "containerAppPetStoreProductService" {
   container_registry_login_server        = module.containerRegistry.login_server
   container_registry_admin_username      = module.containerRegistry.admin_username
   container_registry_admin_password      = module.containerRegistry.admin_password
-  enviroment_variables                   = {}
+  enviroment_variables                   = merge(
+    module.postgresql.env
+  )
 
   depends_on = [
     module.naming,
     module.resourceGroup,
     module.applicationInsights,
     module.containerAppEnvironment,
-    module.containerRegistry
+    module.containerRegistry,
+    module.postgresql
   ]
 }

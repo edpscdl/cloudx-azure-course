@@ -5,9 +5,3 @@ resource "azurerm_container_registry" "containerRegistry" {
   sku                 = var.sku
   admin_enabled       = var.admin_enabled
 }
-
-resource "azurerm_key_vault_secret" "containerRegistryAdminPassword" {
-  name         = "${var.name}-administrator-password"
-  value        = azurerm_container_registry.containerRegistry.admin_password
-  key_vault_id = var.key_vault_id
-}
