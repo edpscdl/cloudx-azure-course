@@ -1,33 +1,33 @@
-drop table petstoredb.public.category CASCADE;
-drop table petstoredb.public.tag CASCADE;
-drop table petstoredb.public.product CASCADE;
-drop table petstoredb.public.product_tag CASCADE;
+DROP TABLE IF EXISTS petstoredb.public.product_tag CASCADE;
+DROP TABLE IF EXISTS petstoredb.public.product CASCADE;
+DROP TABLE IF EXISTS petstoredb.public.tag CASCADE;
+DROP TABLE IF EXISTS petstoredb.public.category CASCADE;
 
-create table petstoredb.public.category
+CREATE TABLE IF NOT EXISTS petstoredb.public.category
 (
-    id                bigserial     not null primary key,
-    name              varchar(64)   not null unique
+    id   BIGSERIAL   NOT NULL PRIMARY KEY,
+    name VARCHAR(64) NOT NULL UNIQUE
 );
 
-create table petstoredb.public.tag
+CREATE TABLE IF NOT EXISTS petstoredb.public.tag
 (
-    id                bigserial     not null primary key,
-    name              varchar(64)   not null unique
+    id   BIGSERIAL   NOT NULL PRIMARY KEY,
+    name VARCHAR(64) NOT NULL UNIQUE
 );
 
-create table petstoredb.public.product
+CREATE TABLE IF NOT EXISTS petstoredb.public.product
 (
-    id                bigserial     not null primary key,
-    name              varchar(64)   not null unique,
-    category_id       bigserial     not null,
-    photoURL          varchar(255)  not null,
-    status            varchar(64)   not null,
-    constraint fk_category foreign key (category_id) references category(id)
+    id          BIGSERIAL    NOT NULL PRIMARY KEY,
+    name        VARCHAR(64)  NOT NULL UNIQUE,
+    category_id BIGSERIAL    NOT NULL,
+    photoURL    VARCHAR(255) NOT NULL,
+    status      VARCHAR(64)  NOT NULL,
+    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
-create table petstoredb.public.product_tag
+CREATE TABLE IF NOT EXISTS petstoredb.public.product_tag
 (
-    product_id        bigserial     not null references product (id) on delete cascade,
-    tag_id            bigserial     not null references tag (id) on delete cascade,
-    constraint product_tag_pkey primary key (product_id, tag_id)
+    product_id BIGSERIAL NOT NULL REFERENCES product (id) ON DELETE CASCADE,
+    tag_id     BIGSERIAL NOT NULL REFERENCES tag (id) ON DELETE CASCADE,
+    CONSTRAINT product_tag_pkey PRIMARY KEY (product_id, tag_id)
 );
