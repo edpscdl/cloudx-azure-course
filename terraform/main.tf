@@ -67,6 +67,22 @@ module "postgresql" {
   ]
 }
 
+module "cosmosdb" {
+  source = "./modules/dataBaseCosmos"
+
+  name                = module.naming.postgresql_database.name_unique
+  location            = module.resourceGroup.location
+  resource_group_name = module.resourceGroup.name
+
+  database_name = "petstore"
+  container_name = "orders"
+
+  depends_on = [
+    module.naming,
+    module.resourceGroup
+  ]
+}
+
 module "containerRegistry" {
   source = "./modules/containerRegistry"
 
@@ -139,7 +155,8 @@ module "containerAppPetStoreOrderService" {
   container_registry_admin_username      = module.containerRegistry.admin_username
   container_registry_admin_password      = module.containerRegistry.admin_password
   enviroment_variables = merge(
-    module.containerAppPetStoreProductService.env
+    module.containerAppPetStoreProductService.env,
+    module.cosmosdb.env
   )
 
   depends_on = [
@@ -148,7 +165,8 @@ module "containerAppPetStoreOrderService" {
     module.applicationInsights,
     module.containerAppEnvironment,
     module.containerRegistry,
-    module.containerAppPetStoreProductService
+    module.containerAppPetStoreProductService,
+    module.cosmosdb
   ]
 }
 
