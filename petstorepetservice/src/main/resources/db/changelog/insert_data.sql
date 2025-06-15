@@ -25,7 +25,7 @@ WHERE NOT EXISTS (SELECT 1
                   FROM petstorepetservice_db.public.tag
                   WHERE name = data.name);
 
-INSERT INTO petstorepetservice_db.public.product (id, name, category_id, photoURL, status)
+INSERT INTO petstorepetservice_db.public.pet (id, name, category_id, photoURL, status)
 SELECT *
 FROM (VALUES (1, 'Afador', 1,
               'https://raw.githubusercontent.com/chtrembl/staticcontent/master/dog-breeds/afador.jpg?raw=true',
@@ -124,10 +124,10 @@ FROM (VALUES (1, 'Afador', 1,
               'https://raw.githubusercontent.com/chtrembl/staticcontent/master/fish-breeds/goldfish.jpg?raw=true',
               'available')) AS data(id, name, category_id, photoURL, status)
 WHERE NOT EXISTS (SELECT 1
-                  FROM petstorepetservice_db.public.product
+                  FROM petstorepetservice_db.public.pet
                   WHERE name = data.name);
 
-INSERT INTO petstorepetservice_db.public.product_tag (product_id, tag_id)
+INSERT INTO petstorepetservice_db.public.pet_tag (pet_id, tag_id)
 SELECT *
 FROM (VALUES (1, 1),
              (1, 2),
@@ -190,8 +190,8 @@ FROM (VALUES (1, 1),
              (30, 3),
              (30, 4),
              (31, 3),
-             (31, 5)) AS data(product_id, tag_id)
+             (31, 5)) AS data(pet_id, tag_id)
 WHERE NOT EXISTS (SELECT 1
-                  FROM petstorepetservice_db.public.product_tag
-                  WHERE product_id = data.product_id
+                  FROM petstorepetservice_db.public.pet_tag
+                  WHERE pet_id = data.pet_id
                     AND tag_id = data.tag_id);

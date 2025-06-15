@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS petstorepetservice_db.public.pet
     CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
-CREATE TABLE IF NOT EXISTS petstorepetservice_db.public.product_tag
+CREATE TABLE IF NOT EXISTS petstorepetservice_db.public.pet_tag
 (
     pet_id BIGSERIAL NOT NULL REFERENCES pet (id) ON DELETE CASCADE,
     tag_id BIGSERIAL NOT NULL REFERENCES tag (id) ON DELETE CASCADE,
