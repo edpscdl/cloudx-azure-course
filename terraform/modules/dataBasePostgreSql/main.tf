@@ -14,7 +14,7 @@ resource "random_password" "admin_password" {
 }
 
 locals {
-  administrator_login    = replace("${var.database_name}admin", "[^a-zA-Z0-9]", "")
+  administrator_login    = replace("${var.name}admin", "[^a-zA-Z0-9]", "")
   administrator_password = random_password.admin_password.result
   myip                   = chomp(data.http.myip.response_body)
 }
