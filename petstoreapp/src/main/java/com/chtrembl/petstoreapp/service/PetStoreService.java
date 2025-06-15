@@ -9,11 +9,11 @@ import java.util.Collection;
 import java.util.List;
 
 public interface PetStoreService {
-	Collection<Pet> getPets(String category);
+    Collection<Pet> getPets(String category);
 
-	Collection<Product> getProducts(String category, List<Tag> tags);
+    Collection<Product> getProducts(String category, List<Tag> tags);
 
-	void updateOrder(long productId, int quantity, boolean completeOrder);
+    void updateOrder(long productId, int quantity, boolean completeOrder);
 
-	Order retrieveOrder(String orderId);
+    Order retrieveOrder(String orderId);
 }

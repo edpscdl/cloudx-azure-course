@@ -17,54 +17,54 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class Order {
-	private String id;
-	private String email;
-	private List<Product> products;
-	private StatusEnum status;
-	private Boolean complete = false;
+    private String id;
+    private String email;
+    private List<Product> products;
+    private StatusEnum status;
+    private Boolean complete = false;
 
-	/**
-	 * Order Status
-	 */
-	public enum StatusEnum {
-		PLACED("placed"),
-		APPROVED("approved"),
-		DELIVERED("delivered");
+    public Order id(String id) {
+        this.id = id;
+        return this;
+    }
 
-		private final String value;
+    public Order products(List<Product> products) {
+        this.products = products;
+        return this;
+    }
 
-		StatusEnum(String value) {
-			this.value = value;
-		}
+    public boolean isComplete() {
+        return complete != null && complete;
+    }
 
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
+    /**
+     * Order Status
+     */
+    public enum StatusEnum {
+        PLACED("placed"),
+        APPROVED("approved"),
+        DELIVERED("delivered");
 
-		@JsonCreator
-		public static StatusEnum fromValue(String text) {
-			for (StatusEnum b : StatusEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
+        private final String value;
 
-	public Order id(String id) {
-		this.id = id;
-		return this;
-	}
+        StatusEnum(String value) {
+            this.value = value;
+        }
 
-	public Order products(List<Product> products) {
-		this.products = products;
-		return this;
-	}
+        @JsonCreator
+        public static StatusEnum fromValue(String text) {
+            for (StatusEnum b : StatusEnum.values()) {
+                if (String.valueOf(b.value).equals(text)) {
+                    return b;
+                }
+            }
+            return null;
+        }
 
-	public boolean isComplete() {
-		return complete != null && complete;
-	}
+        @Override
+        @JsonValue
+        public String toString() {
+            return String.valueOf(value);
+        }
+    }
 }

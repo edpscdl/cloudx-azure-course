@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product,String> {
+public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findProductsByStatusIsIn(Collection<Product.StatusEnum> status);
+
     Optional<Product> findProductByIdIs(Long id);
 }

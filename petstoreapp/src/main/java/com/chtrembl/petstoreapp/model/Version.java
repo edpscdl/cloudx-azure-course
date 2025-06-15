@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 
 public class Version {
-	private String version;
-	private String date;
+    private String version;
+    private String date;
 }

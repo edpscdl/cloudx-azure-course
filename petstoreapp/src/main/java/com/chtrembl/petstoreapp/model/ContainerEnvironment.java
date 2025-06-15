@@ -22,55 +22,55 @@ import java.util.Calendar;
 @Setter
 @Slf4j
 public class ContainerEnvironment {
-	private String containerHostName;
-	private String appVersion;
-	private String appDate;
-	private String year;
-	private boolean securityEnabled;
+    private String containerHostName;
+    private String appVersion;
+    private String appDate;
+    private String year;
+    private boolean securityEnabled;
 
-	@Value("${petstore.service.pet.url:}")
-	private String petStorePetServiceURL;
+    @Value("${petstore.service.pet.url:}")
+    private String petStorePetServiceURL;
 
-	@Value("${petstore.service.product.url:}")
-	private String petStoreProductServiceURL;
+    @Value("${petstore.service.product.url:}")
+    private String petStoreProductServiceURL;
 
-	@Value("${petstore.service.order.url:}")
-	private String petStoreOrderServiceURL;
+    @Value("${petstore.service.order.url:}")
+    private String petStoreOrderServiceURL;
 
-	@Autowired
-	private CacheManager currentUsersCacheManager;
+    @Autowired
+    private CacheManager currentUsersCacheManager;
 
-	@PostConstruct
-	private void initialize() {
-		try {
-			this.setContainerHostName(
-					InetAddress.getLocalHost().getHostAddress() + "/" + InetAddress.getLocalHost().getHostName());
-		} catch (UnknownHostException e) {
-			this.setContainerHostName("unknown");
-		}
+    @PostConstruct
+    private void initialize() {
+        try {
+            this.setContainerHostName(
+                    InetAddress.getLocalHost().getHostAddress() + "/" + InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException e) {
+            this.setContainerHostName("unknown");
+        }
 
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			ClassPathResource resource = new ClassPathResource("version.json");
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ClassPathResource resource = new ClassPathResource("version.json");
 
-			try (InputStream inputStream = resource.getInputStream()) {
-				Version version = objectMapper.readValue(inputStream, Version.class);
-				this.setAppVersion(version.getVersion());
-				this.setAppDate(version.getDate());
-			}
-		} catch (IOException e) {
-			log.error("Error parsing file {}", e.getMessage());
-			this.setAppVersion("unknown");
-			this.setAppDate("unknown");
-		}
+            try (InputStream inputStream = resource.getInputStream()) {
+                Version version = objectMapper.readValue(inputStream, Version.class);
+                this.setAppVersion(version.getVersion());
+                this.setAppDate(version.getDate());
+            }
+        } catch (IOException e) {
+            log.error("Error parsing file {}", e.getMessage());
+            this.setAppVersion("unknown");
+            this.setAppDate("unknown");
+        }
 
-		this.setYear(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
-	}
+        this.setYear(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+    }
 
-	public String getAppVersion() {
-		if ("version".equals(this.appVersion) || this.appVersion == null) {
-			return String.valueOf(System.currentTimeMillis());
-		}
-		return this.appVersion;
-	}
+    public String getAppVersion() {
+        if ("version".equals(this.appVersion) || this.appVersion == null) {
+            return String.valueOf(System.currentTimeMillis());
+        }
+        return this.appVersion;
+    }
 }

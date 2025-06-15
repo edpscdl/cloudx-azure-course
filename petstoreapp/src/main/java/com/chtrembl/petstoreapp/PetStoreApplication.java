@@ -30,7 +30,7 @@ public class PetStoreApplication {
             log.info("Application Insights DISABLED via APPLICATIONINSIGHTS_ENABLED environment variable");
             return;
         }
-        
+
         String connectionString = System.getenv(AI_CONNECTION_STRING_ENV);
 
         if (StringUtils.isNotBlank(connectionString)) {

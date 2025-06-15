@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PetRepository extends JpaRepository<Pet,String> {
+public interface PetRepository extends JpaRepository<Pet, String> {
     List<Pet> findPetsByStatusIsIn(Collection<Pet.StatusEnum> status);
+
     Optional<Pet> findPetByIdIs(Long id);
 }

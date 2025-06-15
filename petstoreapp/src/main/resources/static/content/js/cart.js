@@ -1,5 +1,5 @@
 // Cart JavaScript functionality
-(function() {
+(function () {
     'use strict';
 
     // CSRF token for AJAX requests
@@ -38,7 +38,7 @@
                 method: 'POST',
                 body: formData,
                 headers: {
-                    ...(csrfToken && { [csrfHeader]: csrfToken })
+                    ...(csrfToken && {[csrfHeader]: csrfToken})
                 }
             });
 
@@ -72,7 +72,7 @@
                 method: 'POST',
                 body: formData,
                 headers: {
-                    ...(csrfToken && { [csrfHeader]: csrfToken })
+                    ...(csrfToken && {[csrfHeader]: csrfToken})
                 }
             });
 
@@ -104,7 +104,7 @@
                 method: 'POST',
                 body: formData,
                 headers: {
-                    ...(csrfToken && { [csrfHeader]: csrfToken })
+                    ...(csrfToken && {[csrfHeader]: csrfToken})
                 }
             });
 
@@ -129,7 +129,7 @@
                 method: 'GET',
                 headers: {
                     'Accept': 'text/html',
-                    ...(csrfToken && { [csrfHeader]: csrfToken })
+                    ...(csrfToken && {[csrfHeader]: csrfToken})
                 }
             });
 
@@ -192,7 +192,7 @@
     }
 
     // Initialize when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         initCartAnimations();
     });
 

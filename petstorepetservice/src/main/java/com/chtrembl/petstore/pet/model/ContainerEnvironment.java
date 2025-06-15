@@ -24,17 +24,17 @@ public class ContainerEnvironment {
     private String appDate;
     private String year;
 
-	@PostConstruct
+    @PostConstruct
     private void initialize() {
-		try {
-			this.setContainerHostName(
-					InetAddress.getLocalHost().getHostAddress() + "/" + InetAddress.getLocalHost().getHostName());
-		} catch (UnknownHostException e) {
-			this.setContainerHostName("unknown");
-		}
+        try {
+            this.setContainerHostName(
+                    InetAddress.getLocalHost().getHostAddress() + "/" + InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException e) {
+            this.setContainerHostName("unknown");
+        }
 
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
             ClassPathResource resource = new ClassPathResource("version.json");
 
             try (InputStream inputStream = resource.getInputStream()) {
@@ -42,14 +42,14 @@ public class ContainerEnvironment {
                 this.setAppVersion(version.getVersion());
                 this.setAppDate(version.getDate());
             }
-		} catch (IOException e) {
+        } catch (IOException e) {
             log.error("Error parsing file {}", e.getMessage());
-			this.setAppVersion("unknown");
-			this.setAppDate("unknown");
-		}
+            this.setAppVersion("unknown");
+            this.setAppDate("unknown");
+        }
 
-		this.setYear(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
-	}
+        this.setYear(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+    }
 
     public String getAppVersion() {
         if ("version".equals(this.appVersion) || this.appVersion == null) {

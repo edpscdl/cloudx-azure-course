@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Version {
-	private String version;
-	private String date;
+    private String version;
+    private String date;
 }

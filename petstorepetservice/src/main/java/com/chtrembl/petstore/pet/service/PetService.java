@@ -22,7 +22,7 @@ public class PetService {
 
         return petRepository.findPetsByStatusIsIn(
                 status.stream()
-                        .map(Pet.StatusEnum::valueOf)
+                        .map(Pet.StatusEnum::fromValue)
                         .collect(Collectors.toList())
         );
     }

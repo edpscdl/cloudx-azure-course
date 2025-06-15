@@ -22,41 +22,41 @@ import java.util.Map;
 @Getter
 @Setter
 public class User {
-	private String name = "Guest";
-	private String sessionId;
-	private String email;
-	private List<Pet> pets;
-	private List<Product> products;
-	private int cartCount;
-	private boolean initialTelemetryRecorded;
+    private String name = "Guest";
+    private String sessionId;
+    private String email;
+    private List<Pet> pets;
+    private List<Product> products;
+    private int cartCount;
+    private boolean initialTelemetryRecorded;
 
-	@Autowired(required = false)
-	private transient TelemetryClient telemetryClient;
+    @Autowired(required = false)
+    private transient TelemetryClient telemetryClient;
 
-	@Autowired
-	private ContainerEnvironment containerEnvironment;
+    @Autowired
+    private ContainerEnvironment containerEnvironment;
 
-	@PostConstruct
-	private void initialize() {
-		if (this.telemetryClient == null) {
-			this.telemetryClient = new com.chtrembl.petstoreapp.service.TelemetryClient();
-		}
-	}
+    @PostConstruct
+    private void initialize() {
+        if (this.telemetryClient == null) {
+            this.telemetryClient = new com.chtrembl.petstoreapp.service.TelemetryClient();
+        }
+    }
 
-	public synchronized void setPets(List<Pet> pets) {
-		this.pets = pets;
-	}
+    public synchronized void setPets(List<Pet> pets) {
+        this.pets = pets;
+    }
 
-	public synchronized void setProducts(List<Product> products) {
-		this.products = products;
-	}
+    public synchronized void setProducts(List<Product> products) {
+        this.products = products;
+    }
 
-	public Map<String, String> getCustomEventProperties() {
-		Map<String, String> properties = new HashMap<String, String>();
-		properties.put("session_Id", this.sessionId);
-		properties.put("appDate", this.containerEnvironment.getAppDate());
-		properties.put("appVersion", this.containerEnvironment.getAppVersion());
-		properties.put("containerHostName", this.containerEnvironment.getContainerHostName());
-		return properties;
-	}
+    public Map<String, String> getCustomEventProperties() {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("session_Id", this.sessionId);
+        properties.put("appDate", this.containerEnvironment.getAppDate());
+        properties.put("appVersion", this.containerEnvironment.getAppVersion());
+        properties.put("containerHostName", this.containerEnvironment.getContainerHostName());
+        return properties;
+    }
 }

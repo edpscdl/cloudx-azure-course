@@ -141,7 +141,7 @@ public class OrderService {
     /**
      * Validates that all products in the order exist in the available products list
      *
-     * @param orderProducts List of products from the order
+     * @param orderProducts     List of products from the order
      * @param availableProducts List of available products from Product Service
      * @throws IllegalArgumentException if any product is not found
      */

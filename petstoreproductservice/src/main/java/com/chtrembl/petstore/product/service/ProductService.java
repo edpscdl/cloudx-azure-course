@@ -23,7 +23,7 @@ public class ProductService {
         return productRepository
                 .findProductsByStatusIsIn(
                         status.stream()
-                                .map(Product.StatusEnum::valueOf)
+                                .map(Product.StatusEnum::fromValue)
                                 .collect(Collectors.toList())
                 );
     }

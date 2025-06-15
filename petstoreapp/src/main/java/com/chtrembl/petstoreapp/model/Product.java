@@ -9,10 +9,10 @@ import java.util.List;
  */
 @Data
 public class Product {
-	private Long id;
-	private Category category;
-	private String name;
-	private String photoURL;
-	private List<Tag> tags;
-	private Integer quantity;
+    private Long id;
+    private Category category;
+    private String name;
+    private String photoURL;
+    private List<Tag> tags;
+    private Integer quantity;
 }

@@ -79,4 +79,5 @@ FROM (VALUES (1, 1),
              (11, 2)) AS data(product_id, tag_id)
 WHERE NOT EXISTS (SELECT 1
                   FROM petstoreproductservice_db.public.product_tag
-                  WHERE product_id = data.product_id AND tag_id = data.tag_id);
+                  WHERE product_id = data.product_id
+                    AND tag_id = data.tag_id);
