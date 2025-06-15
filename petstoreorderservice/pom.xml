@@ -58,8 +58,8 @@
             <version>${httpclient.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-spring-data-cosmos</artifactId>
+            <groupId>com.azure.spring</groupId>
+            <artifactId>spring-cloud-azure-starter-data-cosmos</artifactId>
             <version>5.22.0</version>
         </dependency>
     </dependencies>
