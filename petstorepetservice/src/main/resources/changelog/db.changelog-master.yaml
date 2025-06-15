@@ -6,7 +6,7 @@ databaseChangeLog:
         - sqlFile:
             path: classpath:db/changelog/create_structure.sql
             splitStatements: true
-            endDelimiter: ;
+            endDelimiter: ;    # Разделитель SQL-запросов
 
   - changeSet:
       id: 2-insert-data

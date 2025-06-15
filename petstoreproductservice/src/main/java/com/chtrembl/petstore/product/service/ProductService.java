@@ -1,7 +1,7 @@
 package com.chtrembl.petstore.product.service;
 
 import com.chtrembl.petstore.product.model.Product;
-import com.chtrembl.petstore.product.repository.PetProductRepository;
+import com.chtrembl.petstore.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final PetProductRepository petProductRepository;
+    private final ProductRepository productRepository;
 
     public List<Product> findProductsByStatus(List<String> status) {
         log.info("Finding products with status: {}", status);
 
-        return petProductRepository
+        return productRepository
                 .findProductsByStatusIsIn(
                         status.stream()
                                 .map(Product.StatusEnum::valueOf)
@@ -31,15 +31,15 @@ public class ProductService {
     public Optional<Product> findProductById(Long productId) {
         log.info("Finding product with id: {}", productId);
 
-        return petProductRepository.findProductByIdIs(productId);
+        return productRepository.findProductByIdIs(productId);
     }
 
     public List<Product> getAllProducts() {
         log.info("Getting all products");
-        return petProductRepository.findAll();
+        return productRepository.findAll();
     }
 
     public Long getProductCount() {
-        return petProductRepository.count();
+        return productRepository.count();
     }
 }

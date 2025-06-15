@@ -61,8 +61,6 @@ module "postgresql" {
   location            = module.resourceGroup.location
   resource_group_name = module.resourceGroup.name
 
-  database_name = "petstoredb"
-
   depends_on = [
     module.naming,
     module.resourceGroup

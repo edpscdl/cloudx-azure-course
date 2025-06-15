@@ -35,8 +35,13 @@ resource "azurerm_postgresql_flexible_server" "postgresql" {
   create_mode = "Default"
 }
 
-resource "azurerm_postgresql_flexible_server_database" "petstoredb" {
-  name      = var.database_name
+resource "azurerm_postgresql_flexible_server_database" "petstore_product_db" {
+  name      = "petstoreproductservice_db"
+  server_id = azurerm_postgresql_flexible_server.postgresql.id
+}
+
+resource "azurerm_postgresql_flexible_server_database" "petstore_pet_db" {
+  name      = "petstorepetservice_db"
   server_id = azurerm_postgresql_flexible_server.postgresql.id
 }
 

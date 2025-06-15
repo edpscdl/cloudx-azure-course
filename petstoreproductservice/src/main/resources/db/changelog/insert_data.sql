@@ -1,4 +1,4 @@
-INSERT INTO petstoredb.public.category (id, name)
+INSERT INTO petstoreproductservice_db.public.category (id, name)
 SELECT *
 FROM (VALUES (1, 'Dog Toy'),
              (2, 'Dog Food'),
@@ -7,18 +7,18 @@ FROM (VALUES (1, 'Dog Toy'),
              (5, 'Fish Toy'),
              (6, 'Fish Food')) AS data(id, name)
 WHERE NOT EXISTS (SELECT 1
-                  FROM petstoredb.public.category
+                  FROM petstoreproductservice_db.public.category
                   WHERE name = data.name);
 
-INSERT INTO petstoredb.public.tag (id, name)
+INSERT INTO petstoreproductservice_db.public.tag (id, name)
 SELECT *
 FROM (VALUES (1, 'small'),
              (2, 'large')) AS data(id, name)
 WHERE NOT EXISTS (SELECT 1
-                  FROM petstoredb.public.tag
+                  FROM petstoreproductservice_db.public.tag
                   WHERE name = data.name);
 
-INSERT INTO petstoredb.public.product (id, name, category_id, photoURL, status)
+INSERT INTO petstoreproductservice_db.public.product (id, name, category_id, photoURL, status)
 SELECT *
 FROM (VALUES (1, 'Ball', 1,
               'https://raw.githubusercontent.com/chtrembl/staticcontent/master/dog-toys/ball.jpg?raw=true',
@@ -53,10 +53,10 @@ FROM (VALUES (1, 'Ball', 1,
               'https://raw.githubusercontent.com/chtrembl/staticcontent/master/fish-food/fish.jpg?raw=true',
               'available')) AS data(id, name, category_id, photoURL, status)
 WHERE NOT EXISTS (SELECT 1
-                  FROM petstoredb.public.product
+                  FROM petstoreproductservice_db.public.product
                   WHERE name = data.name);
 
-INSERT INTO petstoredb.public.product_tag (product_id, tag_id)
+INSERT INTO petstoreproductservice_db.public.product_tag (product_id, tag_id)
 SELECT *
 FROM (VALUES (1, 1),
              (1, 2),
@@ -78,5 +78,5 @@ FROM (VALUES (1, 1),
              (11, 1),
              (11, 2)) AS data(product_id, tag_id)
 WHERE NOT EXISTS (SELECT 1
-                  FROM petstoredb.public.product_tag
+                  FROM petstoreproductservice_db.public.product_tag
                   WHERE product_id = data.product_id AND tag_id = data.tag_id);

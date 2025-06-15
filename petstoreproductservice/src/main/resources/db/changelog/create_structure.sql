@@ -1,21 +1,21 @@
-DROP TABLE IF EXISTS petstoredb.public.product_tag CASCADE;
-DROP TABLE IF EXISTS petstoredb.public.product CASCADE;
-DROP TABLE IF EXISTS petstoredb.public.tag CASCADE;
-DROP TABLE IF EXISTS petstoredb.public.category CASCADE;
+DROP TABLE IF EXISTS petstoreproductservice_db.public.product_tag CASCADE;
+DROP TABLE IF EXISTS petstoreproductservice_db.public.product CASCADE;
+DROP TABLE IF EXISTS petstoreproductservice_db.public.tag CASCADE;
+DROP TABLE IF EXISTS petstoreproductservice_db.public.category CASCADE;
 
-CREATE TABLE IF NOT EXISTS petstoredb.public.category
+CREATE TABLE IF NOT EXISTS petstoreproductservice_db.public.category
 (
     id   BIGSERIAL   NOT NULL PRIMARY KEY,
     name VARCHAR(64) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS petstoredb.public.tag
+CREATE TABLE IF NOT EXISTS petstoreproductservice_db.public.tag
 (
     id   BIGSERIAL   NOT NULL PRIMARY KEY,
     name VARCHAR(64) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS petstoredb.public.product
+CREATE TABLE IF NOT EXISTS petstoreproductservice_db.public.product
 (
     id          BIGSERIAL    NOT NULL PRIMARY KEY,
     name        VARCHAR(64)  NOT NULL UNIQUE,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS petstoredb.public.product
     CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
-CREATE TABLE IF NOT EXISTS petstoredb.public.product_tag
+CREATE TABLE IF NOT EXISTS petstoreproductservice_db.public.product_tag
 (
     product_id BIGSERIAL NOT NULL REFERENCES product (id) ON DELETE CASCADE,
     tag_id     BIGSERIAL NOT NULL REFERENCES tag (id) ON DELETE CASCADE,
