@@ -23,24 +23,24 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AppConfig implements WebMvcConfigurer {
 
-	private final MDCInterceptor mdcInterceptor;
+    private final MDCInterceptor mdcInterceptor;
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(mdcInterceptor)
-				.addPathPatterns("/**")
-				.excludePathPatterns("/content/**", "/css/**", "/js/**", "/images/**");
-	}
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(mdcInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/content/**", "/css/**", "/js/**", "/images/**");
+    }
 
-	@Bean
-	public Caffeine<Object, Object> caffeineConfig() {
-		return Caffeine.newBuilder().expireAfterAccess(300, TimeUnit.SECONDS);
-	}
+    @Bean
+    public Caffeine<Object, Object> caffeineConfig() {
+        return Caffeine.newBuilder().expireAfterAccess(300, TimeUnit.SECONDS);
+    }
 
-	@Bean
-	public CacheManager currentUsersCacheManager(Caffeine<Object, Object> caffeine) {
-		CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
-		caffeineCacheManager.setCaffeine(caffeine);
-		return caffeineCacheManager;
-	}
+    @Bean
+    public CacheManager currentUsersCacheManager(Caffeine<Object, Object> caffeine) {
+        CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
+        caffeineCacheManager.setCaffeine(caffeine);
+        return caffeineCacheManager;
+    }
 }

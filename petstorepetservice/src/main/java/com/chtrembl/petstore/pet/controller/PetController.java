@@ -28,86 +28,86 @@ import java.util.List;
 @Tag(name = "Pet", description = "Pet Store Pet API")
 public class PetController {
 
-	private final PetService petService;
+    private final PetService petService;
 
-	@Operation(
-			summary = "Find pets by status",
-			description = "Returns a list of pets filtered by their status (available, pending, sold)"
-	)
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Pets found successfully",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = Pet.class))),
-			@ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-	})
-	@GetMapping("/pet/findByStatus")
-	public ResponseEntity<List<Pet>> findPetsByStatus(
-			@Parameter(description = "Status values that need to be considered for filter",
-					required = true,
-					example = "available")
-			@RequestParam(value = "status", required = true) List<String> status) {
+    @Operation(
+            summary = "Find pets by status",
+            description = "Returns a list of pets filtered by their status (available, pending, sold)"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pets found successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pet.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping("/pet/findByStatus")
+    public ResponseEntity<List<Pet>> findPetsByStatus(
+            @Parameter(description = "Status values that need to be considered for filter",
+                    required = true,
+                    example = "available")
+            @RequestParam(value = "status", required = true) List<String> status) {
 
-		log.info("Received GET request to /petstorepetservice/v2/pet/findByStatus with status: {}", status);
+        log.info("Received GET request to /petstorepetservice/v2/pet/findByStatus with status: {}", status);
 
-		try {
-			List<Pet> pets = petService.findPetsByStatus(status);
-			log.info("Successfully found {} pets with status: {}", pets.size(), status);
-			return ResponseEntity.ok(pets);
-		} catch (Exception e) {
-			log.error("Error occurred while finding pets by status {}: {}", status, e.getMessage(), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-	}
+        try {
+            List<Pet> pets = petService.findPetsByStatus(status);
+            log.info("Successfully found {} pets with status: {}", pets.size(), status);
+            return ResponseEntity.ok(pets);
+        } catch (Exception e) {
+            log.error("Error occurred while finding pets by status {}: {}", status, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-	@Operation(
-			summary = "Find pet by ID",
-			description = "Returns a single pet by its ID"
-	)
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Pet found successfully",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = Pet.class))),
-			@ApiResponse(responseCode = "404", description = "Pet not found", content = @Content)
-	})
-	@GetMapping("/pet/{petId}")
-	public ResponseEntity<Pet> getPetById(
-			@Parameter(description = "ID of pet to return", required = true, example = "1")
-			@PathVariable("petId") Long petId) {
+    @Operation(
+            summary = "Find pet by ID",
+            description = "Returns a single pet by its ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pet found successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pet.class))),
+            @ApiResponse(responseCode = "404", description = "Pet not found", content = @Content)
+    })
+    @GetMapping("/pet/{petId}")
+    public ResponseEntity<Pet> getPetById(
+            @Parameter(description = "ID of pet to return", required = true, example = "1")
+            @PathVariable("petId") Long petId) {
 
-		log.info("Received GET request to /petstorepetservice/v2/pet/{}", petId);
+        log.info("Received GET request to /petstorepetservice/v2/pet/{}", petId);
 
-		return petService.findPetById(petId)
-				.map(pet -> {
-					log.info("Successfully found pet: id={}, name='{}'", pet.getId(), pet.getName());
-					return ResponseEntity.ok(pet);
-				})
-				.orElseGet(() -> {
-					log.warn("Pet with id {} not found", petId);
-					return ResponseEntity.notFound().build();
-				});
-	}
+        return petService.findPetById(petId)
+                .map(pet -> {
+                    log.info("Successfully found pet: id={}, name='{}'", pet.getId(), pet.getName());
+                    return ResponseEntity.ok(pet);
+                })
+                .orElseGet(() -> {
+                    log.warn("Pet with id {} not found", petId);
+                    return ResponseEntity.notFound().build();
+                });
+    }
 
-	@Operation(
-			summary = "Get all pets",
-			description = "Returns a list of all available pets"
-	)
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "All pets retrieved successfully",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = Pet.class))),
-			@ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
-	})
-	@GetMapping("/pet/all")
-	public ResponseEntity<List<Pet>> getAllPets() {
-		log.info("Received GET request to /petstorepetservice/v2/pet/all");
+    @Operation(
+            summary = "Get all pets",
+            description = "Returns a list of all available pets"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All pets retrieved successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pet.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping("/pet/all")
+    public ResponseEntity<List<Pet>> getAllPets() {
+        log.info("Received GET request to /petstorepetservice/v2/pet/all");
 
-		try {
-			List<Pet> pets = petService.getAllPets();
-			log.info("Successfully retrieved all pets, count: {}", pets.size());
-			return ResponseEntity.ok(pets);
-		} catch (Exception e) {
-			log.error("Error occurred while retrieving all pets: {}", e.getMessage(), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-	}
+        try {
+            List<Pet> pets = petService.getAllPets();
+            log.info("Successfully retrieved all pets, count: {}", pets.size());
+            return ResponseEntity.ok(pets);
+        } catch (Exception e) {
+            log.error("Error occurred while retrieving all pets: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

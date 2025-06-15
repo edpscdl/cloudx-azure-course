@@ -19,8 +19,8 @@ import org.springframework.util.StringUtils;
 public class WebSecurityConfiguration {
     private final ContainerEnvironment containerEnvironment;
 
-	@Value("${petstore.security.enabled:true}")
-	private boolean securityEnabled;
+    @Value("${petstore.security.enabled:true}")
+    private boolean securityEnabled;
 
     @Value("${spring.cloud.azure.active-directory.b2c.base-uri:}")
     private String azureB2cBaseUri;
@@ -30,13 +30,13 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		if (!securityEnabled) {
+        if (!securityEnabled) {
             http.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
             containerEnvironment.setSecurityEnabled(false);
             log.warn("Security is DISABLED via petstore.security.enabled = false");
             return http.build();
-		}
+        }
 
         boolean azureB2cConfigured = StringUtils.hasText(azureB2cBaseUri) &&
                 StringUtils.hasText(azureB2cClientId);
@@ -61,13 +61,13 @@ public class WebSecurityConfiguration {
 
             containerEnvironment.setSecurityEnabled(true);
             log.info("Security is ENABLED using Azure B2C auto-configuration");
-		} else {
+        } else {
             http.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
             containerEnvironment.setSecurityEnabled(false);
             log.warn("Security ENABLED in config but Azure B2C not configured — fallback to DISABLED");
-		}
+        }
 
         return http.build();
-	}
+    }
 }
