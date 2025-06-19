@@ -187,9 +187,8 @@ module "containerAppPetStoreOrderService" {
   user_assigned_identity_id = module.userAssignedIdentity.id
   enviroment_variables = merge(
     module.containerAppPetStoreProductService.env,
-    {
-      AZURE_CLIENT_ID=module.userAssignedIdentity.client_id
-    }
+    module.keyVault.env,
+    module.userAssignedIdentity.env
   )
 
   depends_on = [
@@ -217,7 +216,10 @@ module "containerAppPetstorePetService" {
   application_insights_connection_string_secret_name = module.applicationInsights.secret_name_connection_string
   container_registry_login_server_secret_name        = module.containerRegistry.secret_name_login_server
   user_assigned_identity_id = module.userAssignedIdentity.id
-  enviroment_variables                   = {}
+  enviroment_variables                   = merge(
+    module.keyVault.env,
+    module.userAssignedIdentity.env
+  )
 
   depends_on = [
     module.naming,
@@ -243,7 +245,10 @@ module "containerAppPetStoreProductService" {
   application_insights_connection_string_secret_name = module.applicationInsights.secret_name_connection_string
   container_registry_login_server_secret_name        = module.containerRegistry.secret_name_login_server
   user_assigned_identity_id = module.userAssignedIdentity.id
-  enviroment_variables                   = {}
+  enviroment_variables                   = merge(
+    module.keyVault.env,
+    module.userAssignedIdentity.env
+  )
 
   depends_on = [
     module.naming,

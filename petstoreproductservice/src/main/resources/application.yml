@@ -1,10 +1,20 @@
 spring:
   application:
-    name: petstoreproductservice
+  cloud:
+    azure:
+      credential:
+        managed-identity-enabled: true
+        client-id: ${AZURE_CLIENT_ID}
+      keyvault:
+        secret:
+          property-source-enabled: true
+          property-sources:
+            - name: pet-store-key-vault
+              endpoint: ${AZURE_KEY_VAULT_ENDPOINT}
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL_SERVER_HOST}:${POSTGRESQL_SERVER_PORT}/petstoreproductservice_db
-    username: ${POSTGRESQL_DATABASE_USERNAME}
-    password: ${POSTGRESQL_DATABASE_PASSWORD}
+    url: jdbc:postgresql://${postgreqsl-server-host}:${postgreqsl-server-port}/petstoreproductservice_db
+    username: ${postgreqsl-user-name}
+    password: ${postgreqsl-user-password}
     driver-class-name: org.postgresql.Driver
     jpa:
       properties:
@@ -15,9 +25,9 @@ spring:
         ddl-auto: update
   liquibase:
     enabled: true
-    url: jdbc:postgresql://${POSTGRESQL_SERVER_HOST}:${POSTGRESQL_SERVER_PORT}/petstoreproductservice_db
-    user: ${POSTGRESQL_DATABASE_USERNAME}
-    password: ${POSTGRESQL_DATABASE_PASSWORD}
+    url: jdbc:postgresql://${postgreqsl-server-host}:${postgreqsl-server-port}/petstoreproductservice_db
+    user: ${postgreqsl-user-name}
+    password: ${postgreqsl-user-password}
     change-log: classpath:db/changelog/db.changelog-master.yaml
 server:
   port: ${PETSTOREPRODUCTSERVICE_SERVER_PORT:8080}

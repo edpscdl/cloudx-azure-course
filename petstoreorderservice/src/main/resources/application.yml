@@ -5,13 +5,13 @@ spring:
     azure:
       credential:
         managed-identity-enabled: true
-        client-id: ${AZURE_CLIENT_ID:d014b4e3-6a7d-4362-99dc-33fa408bcf34}
+        client-id: ${AZURE_CLIENT_ID}
       keyvault:
         secret:
           property-source-enabled: true
           property-sources:
             - name: pet-store-key-vault
-              endpoint: ${AZURE_KEY_VAULT_ENDPOINT:https://kv-ps-d9o4.vault.azure.net/}
+              endpoint: ${AZURE_KEY_VAULT_ENDPOINT}
       cosmos:
         endpoint: ${cosmosdb-account-endpoint}
         key: ${cosmosdb-primary-key}
