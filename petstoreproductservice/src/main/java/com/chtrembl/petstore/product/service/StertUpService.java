@@ -1,6 +1,6 @@
 package com.chtrembl.petstore.product.service;
 
-import com.chtrembl.petstore.product.config.KeyVaultService;
+import com.chtrembl.petstore.product.config.KeyVaultSecretService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ public class StertUpService {
     @Value("${secret.postgresql.password-url}")
     private String postgresqlUserPassword;
 
-    private final KeyVaultService keyVaultService;
+    private final KeyVaultSecretService keyVaultSecretService;
 
     @EventListener
     public void handleAppReady(ApplicationReadyEvent event) {
@@ -29,9 +29,9 @@ public class StertUpService {
 
         log.info("Example to rertive secret by direct URL");
 
-        log.info("secret URL [{}], and value [{}]", postgresqlHost, keyVaultService.getSecretByUrl(postgresqlHost));
-        log.info("secret URL [{}], and value [{}]", postgresqlPort, keyVaultService.getSecretByUrl(postgresqlPort));
-        log.info("secret URL [{}], and value [{}]", postgresqlUsername, keyVaultService.getSecretByUrl(postgresqlUsername));
-        log.info("secret URL [{}], and value [{}]", postgresqlUserPassword, keyVaultService.getSecretByUrl(postgresqlUserPassword));
+        log.info("secret URL [{}], and value [{}]", postgresqlHost, keyVaultSecretService.getSecretByUrl(postgresqlHost));
+        log.info("secret URL [{}], and value [{}]", postgresqlPort, keyVaultSecretService.getSecretByUrl(postgresqlPort));
+        log.info("secret URL [{}], and value [{}]", postgresqlUsername, keyVaultSecretService.getSecretByUrl(postgresqlUsername));
+        log.info("secret URL [{}], and value [{}]", postgresqlUserPassword, keyVaultSecretService.getSecretByUrl(postgresqlUserPassword));
     }
 }
