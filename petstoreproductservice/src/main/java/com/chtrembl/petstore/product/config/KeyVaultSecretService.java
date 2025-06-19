@@ -12,10 +12,11 @@ public class KeyVaultSecretService {
     @Autowired
     private final SecretClientBuilder secretClientBuilder;
 
-    public KeyVaultSecretService(@Value("${secret.keyvault-endpoint}") String keyVaultEndpoint) {
+    public KeyVaultSecretService(@Value("${secret.keyvault-endpoint}") String keyVaultEndpoint,
+                                 @Value("${secret.client-id}") String clientId) {
         this.secretClientBuilder = new SecretClientBuilder()
                 .vaultUrl(keyVaultEndpoint)
-                .credential(new DefaultAzureCredentialBuilder().build());
+                .credential(new DefaultAzureCredentialBuilder().managedIdentityClientId(clientId).build());
     }
 
     public String getSecretByUrl(String secretUrl) {

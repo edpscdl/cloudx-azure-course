@@ -59,6 +59,7 @@ management:
 
 secret:
   keyvault-endpoint: ${AZURE_KEY_VAULT_ENDPOINT}
+  client-id: ${AZURE_CLIENT_ID}
   postgresql:
     host-url: ${URL_SECRET_POSTRGRESQL_HOST}
     port-url: ${URL_SECRET_POSTRGRESQL_PORT}
