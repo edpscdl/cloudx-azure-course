@@ -56,3 +56,10 @@ management:
       enabled: false
     diskspace:
       enabled: false
+
+secret:
+  postgresql:
+    host-url: ${URL_SECRET_POSTRGRESQL_HOST}
+    port-url: ${URL_SECRET_POSTRGRESQL_PORT}
+    username-url: ${URL_SECRET_POSTRGRESQL_USER_NAME}
+    password-url: ${URL_SECRET_POSTRGRESQL_USER_PASSWORD}
