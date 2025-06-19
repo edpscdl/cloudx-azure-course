@@ -58,6 +58,7 @@ management:
       enabled: false
 
 secret:
+  keyvault-endpoint: ${AZURE_KEY_VAULT_ENDPOINT}
   postgresql:
     host-url: ${URL_SECRET_POSTRGRESQL_HOST}
     port-url: ${URL_SECRET_POSTRGRESQL_PORT}

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class KeyVaultService {
-    @Value("${AZURE_KEY_VAULT_ENDPOINT}")
+    @Value("${secret.keyvault-endpoint}")
     private String keyVaultEndpoint;
 
     private final SecretClient secretClient;
