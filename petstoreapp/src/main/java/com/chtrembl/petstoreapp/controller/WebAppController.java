@@ -174,7 +174,7 @@ public class WebAppController {
             Collection<Pet> pets = this.petStoreService.getPets(category);
             Pet pet = new Pet();
             if (pets != null) {
-                pet = this.sessionUser.getPets().get(id - 1);
+                pet = this.sessionUser.getPets().get(id);
             }
 
             model.addAttribute("products",
