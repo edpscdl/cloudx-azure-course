@@ -146,7 +146,7 @@ public class WebAppController {
                 this.petStoreService.getPets(category);
             }
 
-            Pet pet = this.sessionUser.getPets().get(id);
+            Pet pet = this.sessionUser.getPets().stream().filter(p -> p.getId() == id).findFirst().orElseThrow();
             log.info("PetStoreApp /breeddetails requested for {}, routing to dogbreeddetails view...", pet.getName());
             model.addAttribute("pet", pet);
 
@@ -174,7 +174,7 @@ public class WebAppController {
             Collection<Pet> pets = this.petStoreService.getPets(category);
             Pet pet = new Pet();
             if (pets != null) {
-                pet = this.sessionUser.getPets().get(id);
+                pet = this.sessionUser.getPets().stream().filter(p -> p.getId() == id).findFirst().orElseThrow();
             }
 
             model.addAttribute("products",
