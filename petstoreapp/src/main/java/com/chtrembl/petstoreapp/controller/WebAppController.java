@@ -146,7 +146,7 @@ public class WebAppController {
                 this.petStoreService.getPets(category);
             }
 
-            Pet pet = this.sessionUser.getPets().get(id - 1);
+            Pet pet = this.sessionUser.getPets().get(id);
             log.info("PetStoreApp /breeddetails requested for {}, routing to dogbreeddetails view...", pet.getName());
             model.addAttribute("pet", pet);
 

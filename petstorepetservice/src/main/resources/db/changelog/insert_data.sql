@@ -7,13 +7,6 @@ WHERE NOT EXISTS (SELECT 1
                   FROM petstorepetservice_db.public.category
                   WHERE name = data.name);
 
-insert into petstorepetservice_db.public.tag (id, name)
-values (1, 'doggie'),
-       (2, 'large'),
-       (3, 'small'),
-       (4, 'kittie'),
-       (5, 'fishy');
-
 INSERT INTO petstorepetservice_db.public.tag (id, name)
 SELECT *
 FROM (VALUES (1, 'doggie'),
