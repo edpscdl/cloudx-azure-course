@@ -12,6 +12,7 @@ spring:
           property-sources:
             - name: pet-store-key-vault
               endpoint: ${AZURE_KEY_VAULT_ENDPOINT}
+          endpoint: ${AZURE_KEY_VAULT_ENDPOINT}
   datasource:
     url: jdbc:postgresql://${postgreqsl-server-host}:${postgreqsl-server-port}/petstoreproductservice_db
     username: ${postgreqsl-user-name}
