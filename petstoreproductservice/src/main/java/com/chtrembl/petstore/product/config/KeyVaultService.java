@@ -8,12 +8,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class KeyVaultService {
-    @Value("${secret.keyvault-endpoint}")
-    private String keyVaultEndpoint;
-
     private final SecretClient secretClient;
 
-    public KeyVaultService() {
+    public KeyVaultService(@Value("${secret.keyvault-endpoint}") String keyVaultEndpoint) {
         this.secretClient = new SecretClientBuilder()
                 .vaultUrl(keyVaultEndpoint)
                 .credential(new DefaultAzureCredentialBuilder().build())
