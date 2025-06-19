@@ -221,6 +221,8 @@ module "containerAppPetstorePetService" {
     module.userAssignedIdentity.env
   )
 
+  postgresql_server_id = module.postgresql.server_id
+
   depends_on = [
     module.naming,
     module.resourceGroup,
@@ -249,6 +251,8 @@ module "containerAppPetStoreProductService" {
     module.keyVault.env,
     module.userAssignedIdentity.env
   )
+
+  postgresql_server_id = module.postgresql.server_id
 
   depends_on = [
     module.naming,
