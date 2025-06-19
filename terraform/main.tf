@@ -81,7 +81,6 @@ module "postgresql" {
   location            = module.resourceGroup.location
   resource_group_name = module.resourceGroup.name
 
-  key_vault_name = module.keyVault.name
   key_vault_id = module.keyVault.id
 
   depends_on = [
@@ -250,8 +249,7 @@ module "containerAppPetStoreProductService" {
   user_assigned_identity_id = module.userAssignedIdentity.id
   enviroment_variables                   = merge(
     module.keyVault.env,
-    module.userAssignedIdentity.env,
-    module.postgresql.env_direct_urls
+    module.userAssignedIdentity.env
   )
 
   postgresql_server_id = module.postgresql.server_id

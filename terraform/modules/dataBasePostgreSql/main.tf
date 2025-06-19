@@ -1,8 +1,3 @@
-data "azurerm_key_vault" "keyVault" {
-  name                = var.key_vault_name
-  resource_group_name = var.resource_group_name
-}
-
 data "http" "myip" {
   url = "http://whatismyip.akamai.com"
 }
