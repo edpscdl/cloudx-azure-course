@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: petstoreorderservice
+  cloud:
+    azure:
+      credential:
+        managed-identity-enabled: true
+        client-id: ${AZURE_CLIENT_ID:d014b4e3-6a7d-4362-99dc-33fa408bcf34}
+      keyvault:
+        secret:
+          property-source-enabled: true
+          property-sources:
+            - name: pet-store-key-vault
+              endpoint: ${AZURE_KEY_VAULT_ENDPOINT:https://kv-ps-d9o4.vault.azure.net/}
+      cosmos:
+        endpoint: ${cosmosdb-account-endpoint}
+        key: ${cosmosdb-primary-key}
+        database: ${cosmosdb-database-name}
+        populate-query-metrics: true
+
+server:
+  port: ${PETSTOREORDERSERVICE_SERVER_PORT:8080}
+
+petstore:
+  service:
+    product:
+      url: ${PETSTOREPRODUCTSERVICE_URL:http://localhost:8082}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  show-actuator: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  health:
+    ssl:
+      enabled: false
+    diskspace:
+      enabled: false
+
+logging:
+  level:
+    root: INFO
+    com.chtrembl: DEBUG

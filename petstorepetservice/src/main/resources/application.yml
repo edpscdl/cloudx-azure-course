@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: petstorepetservice
+  datasource:
+    url: jdbc:postgresql://${POSTGRESQL_SERVER_HOST}:${POSTGRESQL_SERVER_PORT}/petstorepetservice_db
+    username: ${POSTGRESQL_DATABASE_USERNAME}
+    password: ${POSTGRESQL_DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+      hibernate:
+        ddl-auto: update
+  liquibase:
+    enabled: true
+    url: jdbc:postgresql://${POSTGRESQL_SERVER_HOST}:${POSTGRESQL_SERVER_PORT}/petstorepetservice_db
+    user: ${POSTGRESQL_DATABASE_USERNAME}
+    password: ${POSTGRESQL_DATABASE_PASSWORD}
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+server:
+  port: ${PETSTOREPETSERVICE_SERVER_PORT:8080}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  show-actuator: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  health:
+    ssl:
+      enabled: false
+    diskspace:
+      enabled: false
