@@ -1,0 +1,15 @@
+### Find products by status
+GET http://localhost:8080/petstoreproductservice/v2/product/findByStatus?status=available
+Accept: application/json
+
+### Find products by multiple statuses
+GET http://localhost:8080/petstoreproductservice/v2/product/findByStatus?status=available&status=pending
+Accept: application/json
+
+### Find product by ID
+GET http://localhost:8080/petstoreproductservice/v2/product/1
+Accept: application/json
+
+### Get all products
+GET http://localhost:8080/petstoreproductservice/v2/product/all
+Accept: application/json
