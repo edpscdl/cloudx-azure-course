@@ -22,6 +22,7 @@ spring:
       namespace: ${SERVICEBUS_NAMESPASE}
       pricing-tier: ${SERVICEBUS_PRICING_TIER:standard}
       passwordless-enabled: true
+      connection-string: ${servicebus-queue-connection-string}
     listener:
       receive-timeout: 60s
 
