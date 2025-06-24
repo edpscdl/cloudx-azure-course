@@ -257,8 +257,7 @@ module "containerAppPetStoreApp" {
   enviroment_variables = merge(
     module.containerAppPetStoreOrderService.env,
     module.containerAppPetstorePetService.env,
-    module.containerAppPetStoreProductService.env,
-    module.serviceBusPetStore.env
+    module.containerAppPetStoreProductService.env
   )
 
   depends_on = [
@@ -290,7 +289,8 @@ module "containerAppPetStoreOrderService" {
   enviroment_variables = merge(
     module.containerAppPetStoreProductService.env,
     module.keyVault.env,
-    module.userAssignedIdentity.env
+    module.userAssignedIdentity.env,
+    module.serviceBusPetStore.env
   )
 
   depends_on = [

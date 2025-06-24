@@ -30,7 +30,7 @@ resource "azurerm_servicebus_queue_authorization_rule" "serviceBusQueueAuthoriza
 }
 
 resource "azurerm_key_vault_secret" "serviceBusQueueConnectionString" {
-  name         = "servicebus_queue_connection_string"
+  name         = "servicebus-queue-connection-string"
   value        = azurerm_servicebus_queue_authorization_rule.serviceBusQueueAuthorizationRule.primary_connection_string
   key_vault_id = var.key_vault_id
 }
