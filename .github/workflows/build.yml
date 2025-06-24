@@ -78,6 +78,7 @@ jobs:
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           azure-resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure-acr-registry-name: ${{ vars.AZURE_ACR_REGISTRY_NAME }}
+
       - name: Build and Push orderitemsreserver
         if: ${{ inputs.project == 'orderitemsreserver' || inputs.project == 'all' }}
         uses: ./.github/actions/function-app-build-and-deploy
