@@ -12,6 +12,7 @@ on:
           - petstoreorderservice
           - petstorepetservice
           - petstoreproductservice
+          - orderitemsreserver
           - all
 
 jobs:
@@ -77,3 +78,15 @@ jobs:
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           azure-resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure-acr-registry-name: ${{ vars.AZURE_ACR_REGISTRY_NAME }}
+      - name: Build and Push orderitemsreserver
+        if: ${{ inputs.project == 'orderitemsreserver' || inputs.project == 'all' }}
+        uses: ./.github/actions/function-app-build-and-deploy
+        with:
+          module-name: orderitemsreserver
+          function-name: ${{ vars.FUNCTION_APP_NAME }}
+          tag: ${{ steps.generate_tag.outputs.tag }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-resource-group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          azure-acr-registry-name: ${{ vars.AZURE_ACR_REGISTRY_NAME }}
+          azure-acr-registry-username: ${{ secrets.AZURE_ACR_REGISTRY_USERNAME }}
+          azure-acr-registry-password: ${{ secrets.AZURE_ACR_REGISTRY_PASSWORD }}
