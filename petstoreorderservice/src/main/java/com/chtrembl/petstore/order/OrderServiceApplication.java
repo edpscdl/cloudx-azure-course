@@ -9,7 +9,6 @@ import org.springframework.jms.annotation.EnableJms;
 
 @Slf4j
 @SpringBootApplication
-@EnableJms
 public class OrderServiceApplication {
     private static final String AI_CONNECTION_STRING_ENV = "APPLICATIONINSIGHTS_CONNECTION_STRING";
     private static final String APPLICATIONINSIGHTS_ENABLED = "APPLICATIONINSIGHTS_ENABLED";
