@@ -20,6 +20,7 @@ spring:
   jms:
     servicebus:
       namespace: ${SERVICEBUS_NAMESPASE}
+      queue-name: ${SERVICEBUS_QUEUE_NAME}
       pricing-tier: ${SERVICEBUS_PRICING_TIER:standard}
       passwordless-enabled: true
       connection-string: ${servicebus-queue-connection-string}

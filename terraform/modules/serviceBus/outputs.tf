@@ -9,6 +9,7 @@ output "secret_name_queue_connection_string" {
 output "env" {
   value = {
     SERVICEBUS_NAMESPASE: azurerm_servicebus_namespace.serviceBusNamespace.name
+    SERVICEBUS_QUEUE_NAME: azurerm_servicebus_queue.serviceBusQueue.name
     SERVICEBUS_PRICING_TIER: "standard"
   }
 }

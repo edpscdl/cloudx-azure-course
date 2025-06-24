@@ -6,8 +6,11 @@ import com.chtrembl.petstore.order.model.Product;
 import com.chtrembl.petstore.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.jms.JmsException;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,10 +22,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderService {
+    @Value("${spring.jms.servicebus.queue-name}")
+    private String queueName;
 
     private static final String ORDERS = "orders";
     private final OrderRepository orderRepository;
     private final ProductService productService;
+    private final JmsTemplate jmsTemplate;
 
     private Order createOrder(String orderId) {
         log.info("Creating new order with id: {} and caching it", orderId);
@@ -98,6 +104,12 @@ public class OrderService {
         // Update status only if new status is provided
         if (order.getStatus() != null) {
             updatedOrder.setStatus(order.getStatus());
+        }
+
+        try {
+            jmsTemplate.convertAndSend(queueName, order);
+        } catch (JmsException e) {
+            log.error("Error sending order update", e);
         }
 
         // Handle completion status
