@@ -34,3 +34,15 @@ resource "azurerm_key_vault_secret" "serviceBusQueueConnectionString" {
   value        = azurerm_servicebus_queue_authorization_rule.serviceBusQueueAuthorizationRule.primary_connection_string
   key_vault_id = var.key_vault_id
 }
+
+resource "azurerm_role_assignment" "container_app_sender" {
+  scope                = azurerm_servicebus_namespace.serviceBusNamespace.id
+  role_definition_name = "Azure Service Bus Data Sender"
+  principal_id         = var.user_assigned_identity_principal_id
+}
+
+resource "azurerm_role_assignment" "function_app_receiver" {
+  scope                = azurerm_servicebus_namespace.serviceBusNamespace.id
+  role_definition_name = "Azure Service Bus Data Receiver"
+  principal_id         = var.user_assigned_identity_principal_id
+}

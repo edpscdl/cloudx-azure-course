@@ -72,15 +72,15 @@ resource "azurerm_container_app" "containerApp" {
   }
 }
 
-resource "azurerm_postgresql_flexible_server_firewall_rule" "containerAppWhiteListIp" {
-  count = var.postgresql_server_id != "" ? length(tolist(azurerm_container_app.containerApp.outbound_ip_addresses)) : 0
-
-  name             = "${var.name}-${count.index}-owner"
-  start_ip_address = tolist(azurerm_container_app.containerApp.outbound_ip_addresses)[count.index]
-  end_ip_address   = tolist(azurerm_container_app.containerApp.outbound_ip_addresses)[count.index]
-  server_id        = var.postgresql_server_id
-
-  depends_on = [
-    azurerm_container_app.containerApp
-  ]
-}
+# resource "azurerm_postgresql_flexible_server_firewall_rule" "containerAppWhiteListIp" {
+#   count = var.postgresql_server_id != "" ? length(tolist(azurerm_container_app.containerApp.outbound_ip_addresses)) : 0
+#
+#   name             = "${var.name}-${count.index}-owner"
+#   start_ip_address = tolist(azurerm_container_app.containerApp.outbound_ip_addresses)[count.index]
+#   end_ip_address   = tolist(azurerm_container_app.containerApp.outbound_ip_addresses)[count.index]
+#   server_id        = var.postgresql_server_id
+#
+#   depends_on = [
+#     azurerm_container_app.containerApp
+#   ]
+# }

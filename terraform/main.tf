@@ -88,24 +88,6 @@ module "applicationInsights" {
   ]
 }
 
-module "postgresql" {
-  source = "./modules/dataBasePostgreSql"
-
-  name                = module.naming.postgresql_database.name_unique
-  location            = module.resourceGroup.location
-  resource_group_name = module.resourceGroup.name
-
-  user_assigned_identity_id = module.userAssignedIdentity.id
-  key_vault_id              = module.keyVault.id
-
-  depends_on = [
-    module.naming,
-    module.resourceGroup,
-    module.userAssignedIdentity,
-    module.keyVault
-  ]
-}
-
 module "cosmosdb" {
   source = "./modules/dataBaseCosmos"
 
@@ -199,8 +181,9 @@ module "serviceBusPetStore" {
   resource_group_name = module.resourceGroup.name
   location            = module.resourceGroup.location
 
-  user_assigned_identity_id = module.userAssignedIdentity.id
-  key_vault_id              = module.keyVault.id
+  user_assigned_identity_id           = module.userAssignedIdentity.id
+  user_assigned_identity_principal_id = module.userAssignedIdentity.principal_id
+  key_vault_id                        = module.keyVault.id
 
   depends_on = [
     module.naming,
@@ -322,8 +305,6 @@ module "containerAppPetstorePetService" {
     module.userAssignedIdentity.env
   )
 
-  postgresql_server_id = module.postgresql.server_id
-
   depends_on = [
     module.naming,
     module.resourceGroup,
@@ -331,8 +312,7 @@ module "containerAppPetstorePetService" {
     module.containerAppEnvironment,
     module.containerRegistry,
     module.keyVault,
-    module.userAssignedIdentity,
-    module.postgresql
+    module.userAssignedIdentity
   ]
 }
 
@@ -353,8 +333,6 @@ module "containerAppPetStoreProductService" {
     module.userAssignedIdentity.env
   )
 
-  postgresql_server_id = module.postgresql.server_id
-
   depends_on = [
     module.naming,
     module.resourceGroup,
@@ -362,7 +340,31 @@ module "containerAppPetStoreProductService" {
     module.containerAppEnvironment,
     module.containerRegistry,
     module.keyVault,
+    module.userAssignedIdentity
+  ]
+}
+
+module "postgresql" {
+  source = "./modules/dataBasePostgreSql"
+
+  name                = module.naming.postgresql_database.name_unique
+  location            = module.resourceGroup.location
+  resource_group_name = module.resourceGroup.name
+
+  user_assigned_identity_id = module.userAssignedIdentity.id
+  key_vault_id              = module.keyVault.id
+
+  inbound_ip_addresses = {
+    "${module.containerAppPetstorePetService.name}" : module.containerAppPetstorePetService.outbound_ip_address
+    "${module.containerAppPetStoreProductService.name}" : module.containerAppPetStoreProductService.outbound_ip_address
+  }
+
+  depends_on = [
+    module.naming,
+    module.resourceGroup,
     module.userAssignedIdentity,
-    module.postgresql
+    module.keyVault,
+    module.containerAppPetstorePetService,
+    module.containerAppPetStoreProductService
   ]
 }

@@ -51,7 +51,7 @@ resource "azurerm_postgresql_flexible_server_database" "petstore_pet_db" {
 }
 
 resource "azurerm_postgresql_flexible_server_firewall_rule" "firewall_clientip" {
-  name             = "${var.name}-owner"
+  name             = "${var.name}-portal"
   start_ip_address = local.myip
   end_ip_address   = local.myip
   server_id        = azurerm_postgresql_flexible_server.postgresql.id
@@ -79,4 +79,18 @@ resource "azurerm_key_vault_secret" "postgresqlUserPassword" {
   name         = "postgreqsl-user-password"
   value        = azurerm_postgresql_flexible_server.postgresql.administrator_password
   key_vault_id = var.key_vault_id
+}
+
+
+resource "azurerm_postgresql_flexible_server_firewall_rule" "containerAppWhiteListIp" {
+  for_each = var.inbound_ip_addresses
+
+  name             = "${each.key}-container"
+  start_ip_address = each.value
+  end_ip_address   = each.value
+  server_id        = azurerm_postgresql_flexible_server.postgresql.id
+
+  depends_on = [
+    azurerm_postgresql_flexible_server.postgresql
+  ]
 }

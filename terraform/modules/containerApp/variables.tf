@@ -34,8 +34,3 @@ variable "container_registry_login_server_secret_name" {
 variable "user_assigned_identity_id" {
   type = string
 }
-
-variable "postgresql_server_id" {
-  type    = string
-  default = ""
-}

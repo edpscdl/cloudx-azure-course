@@ -106,12 +106,6 @@ public class OrderService {
             updatedOrder.setStatus(order.getStatus());
         }
 
-        try {
-            jmsTemplate.convertAndSend(queueName, order);
-        } catch (JmsException e) {
-            log.error("Error sending order update", e);
-        }
-
         // Handle completion status
         Boolean isComplete = order.getComplete();
         if (isComplete != null && isComplete) {
@@ -123,7 +117,15 @@ public class OrderService {
             updateOrderProducts(updatedOrder, order.getProducts());
         }
 
-        return orderRepository.save(updatedOrder);
+        Order resultOrder = orderRepository.save(updatedOrder);
+
+        try {
+            jmsTemplate.convertAndSend(queueName, resultOrder);
+        } catch (JmsException e) {
+            log.error("Error sending order update", e);
+        }
+
+        return resultOrder;
     }
 
     /**
