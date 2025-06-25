@@ -16,7 +16,7 @@ public class ServiceBusQueueTriggerJava {
     @StorageAccount("AzureWebJobsStorage")
     public void orderHistory(
             @ServiceBusQueueTrigger(
-                    name = "message",
+                    name = "order",
                     queueName = "%SERVICEBUS_QUEUE_NAME%",
                     connection = "AzureWebJobsServiceBus"
             ) Order order,
