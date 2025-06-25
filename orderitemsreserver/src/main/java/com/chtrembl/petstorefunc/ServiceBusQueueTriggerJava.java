@@ -31,6 +31,8 @@ public class ServiceBusQueueTriggerJava {
 
         context.getLogger().info("Order id["+order.getId()+"] old count["+countBefore+"] new count["+countAfter+"]");
 
+        //It is only required to check for a message processing error.
+        //If there are 3 items in the order, then we throw an error.
         if (order.getProducts() != null && order.getProducts().size() > 0) {
             order.getProducts().stream().map(Product::getQuantity).reduce(Integer::sum).filter(count -> count!=3).orElseThrow();
         }
