@@ -20,6 +20,12 @@
         <appender-ref ref="FILE"/>
     </logger>
 
+    <!-- Suppress Netty version mismatch log -->
+    <logger name="com.azure.core.http.netty.implementation.NettyUtility" level="WARN" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>

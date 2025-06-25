@@ -1,6 +1,7 @@
 package com.chtrembl.petstorefunc;
 
 import com.chtrembl.petstorefunc.model.Order;
+import com.chtrembl.petstorefunc.model.Product;
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.OutputBinding;
 import com.microsoft.azure.functions.annotation.BlobInput;
@@ -24,6 +25,15 @@ public class ServiceBusQueueTriggerJava {
             @BlobOutput(name = "target", path = "archive/{id}.json") OutputBinding<Order> target,
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
+
+        int countBefore = source.map(sourceOrder -> sourceOrder.getProducts().size()).orElse(0);
+        int countAfter = order.getProducts() != null ? order.getProducts().size() : 0;
+
+        context.getLogger().info("Order id["+order.getId()+"] old count["+countBefore+"] new count["+countAfter+"]");
+
+        if (order.getProducts() != null && order.getProducts().size() > 0) {
+            order.getProducts().stream().map(Product::getQuantity).reduce(Integer::sum).filter(count -> count!=3).orElseThrow();
+        }
 
         target.setValue(order);
     }
