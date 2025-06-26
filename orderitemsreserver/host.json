@@ -13,5 +13,14 @@
   "extensionBundle": {
     "id": "Microsoft.Azure.Functions.ExtensionBundle",
     "version": "[4.*, 5.0.0)"
+  },
+  "healthMonitor": {
+    "enabled": true
+  },
+  "retry": {
+    "strategy": "exponentialBackoff",
+    "minimumInterval": "00:00:30",
+    "maximumInterval": "00:05:00",
+    "maxRetryCount": 3
   }
 }
