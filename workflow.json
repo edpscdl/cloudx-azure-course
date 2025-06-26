@@ -1,0 +1,141 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "actions": {
+      "Parse_JSON": {
+        "type": "ParseJson",
+        "inputs": {
+          "content": "@outputs('Compose')",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "quantity": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "photoURL": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "quantity"
+                  ]
+                }
+              },
+              "status": {
+                "type": "string"
+              },
+              "complete": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "products",
+              "status",
+              "complete"
+            ]
+          }
+        },
+        "runAfter": {
+          "Compose": [
+            "SUCCEEDED"
+          ]
+        }
+      },
+      "Compose": {
+        "type": "Compose",
+        "inputs": "@json(triggerBody()['contentData'])",
+        "runAfter": {}
+      },
+      "Send_an_email_(V2)": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "referenceName": "outlook"
+            }
+          },
+          "method": "post",
+          "body": {
+            "To": "TEST_EMAIL@TEST.TEST",
+            "Subject": "[PET STORE] @{body('Parse_JSON')['id']}",
+            "Body": "<p class=\"editor-paragraph\">@{body('Parse_JSON')}</p>",
+            "Importance": "Normal"
+          },
+          "path": "/v2/Mail"
+        },
+        "runAfter": {
+          "Parse_JSON": [
+            "SUCCEEDED"
+          ]
+        }
+      },
+      "Complete_the_message_in_a_queue": {
+        "type": "ServiceProvider",
+        "inputs": {
+          "parameters": {
+            "queueName": "order_history_queue/$DeadLetterQueue",
+            "lockToken": "@triggerOutputs()['body']['lockToken']"
+          },
+          "serviceProviderConfiguration": {
+            "connectionName": "serviceBus",
+            "operationId": "completeQueueMessageV2",
+            "serviceProviderId": "/serviceProviders/serviceBus"
+          }
+        },
+        "runAfter": {
+          "Send_an_email_(V2)": [
+            "SUCCEEDED"
+          ]
+        }
+      }
+    },
+    "contentVersion": "1.0.0.0",
+    "outputs": {},
+    "triggers": {
+      "When_messages_are_available_in_a_queue_(peek-lock)": {
+        "type": "ServiceProvider",
+        "inputs": {
+          "parameters": {
+            "queueName": "order_history_queue/$DeadLetterQueue"
+          },
+          "serviceProviderConfiguration": {
+            "connectionName": "serviceBus",
+            "operationId": "peekLockQueueMessagesV2",
+            "serviceProviderId": "/serviceProviders/serviceBus"
+          }
+        },
+        "splitOn": "@triggerOutputs()?['body']"
+      }
+    }
+  },
+  "kind": "Stateful"
+}
