@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <include resource="org/springframework/boot/logging/logback/structured-console-appender.xml"/>
-    <include resource="org/springframework/boot/logging/logback/structured-file-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml">
+        <file>logs/petservice.log</file>
+    </include>
 
     <logger name="com.chtrembl.petstore.pet" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
