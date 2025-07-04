@@ -1,0 +1,26 @@
+az extension add --name containerapp --upgrade
+az provider register --namespace Microsoft.App
+az provider register --namespace Microsoft.OperationalInsights
+az provider register --namespace Microsoft.AzureTerraform
+
+az extension add --name serviceconnector-passwordless --upgrade
+az extension add --name microsoft-entra-admin
+
+#Run Terraform
+
+az ad sp create-for-rbac \
+    --name "heorhi_utseuski_github_actions" \
+    --json-auth
+
+#Save responce
+
+az role assignment create \
+    --assignee <client-id> \
+    --role "Container Apps Contributor" \
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>
+
+az role assignment create \
+    --assignee <client-id> \
+    --role "AcrPush" \
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>/providers/Microsoft.ContainerRegistry/registries/<acr-name>
+

@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: petstoreproductservice
+  cloud:
+    azure:
+      credential:
+        managed-identity-enabled: true
+        client-id: ${AZURE_CLIENT_ID}
+      keyvault:
+        secret:
+          property-source-enabled: true
+          property-sources:
+            - name: pet-store-key-vault
+              endpoint: ${AZURE_KEY_VAULT_ENDPOINT}
+  datasource:
+    url: jdbc:postgresql://${postgreqsl-server-host}:${postgreqsl-server-port}/petstoreproductservice_db
+    username: ${postgreqsl-user-name}
+    password: ${postgreqsl-user-password}
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+      hibernate:
+        ddl-auto: update
+  liquibase:
+    enabled: true
+    url: jdbc:postgresql://${postgreqsl-server-host}:${postgreqsl-server-port}/petstoreproductservice_db
+    user: ${postgreqsl-user-name}
+    password: ${postgreqsl-user-password}
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+server:
+  port: ${PETSTOREPRODUCTSERVICE_SERVER_PORT:8080}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  show-actuator: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  health:
+    ssl:
+      enabled: false
+    diskspace:
+      enabled: false
