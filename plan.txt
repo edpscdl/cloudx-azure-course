@@ -9,7 +9,7 @@ az extension add --name microsoft-entra-admin
 # Create Azure Active Directory B2C
 # Get values: nameOfApplication, clientId, clientSecret, name of sign-up-or-sign-in user flow, name of password-reset user flow
 # Put this values in terraform.tfvars
-
+# Create main resource group and use it for next scripts.
 
 # Run Terraform
 # Update logout URL in Active Directory B2C
