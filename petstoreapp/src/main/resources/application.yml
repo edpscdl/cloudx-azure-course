@@ -42,16 +42,13 @@ spring:
     azure:
       active-directory:
         b2c:
-          # Enable this together with 'petstore.service.security.enabled = true' in Module 10
           enabled: ${PETSTOREAPP_B2C_ENABLED:false}
-          # Add base-uri, client-id, client-secret, login-flow, logout-success-url, and user-flows
-          base-uri: ${PETSTOREAPP_B2C_BASE_URL}
-
+          base-uri: ${PERSTORE_B2C_BASE_URI}
           credential:
             client-id: ${PERSTORE_B2C_CLIENT_ID}
             client-secret: ${PERSTORE_B2C_SECRET}
           login-flow: sign-up-or-sign-in
-#          logout-success-url: ${PERSTORE_B2C_LOGOUT_URL:https://ca-ps-petstoreapp.greenwater-efba7471.centralus.azurecontainerapps.io/}
+          logout-success-url: ${PERSTORE_B2C_LOGOUT_URL}
           user-flows:
             sign-up-or-sign-in: ${PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
             password-reset: ${PERSTORE_B2C_USERFLOW_PASSWORD_RESET}

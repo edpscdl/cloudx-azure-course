@@ -53,6 +53,11 @@ resource "azurerm_container_app" "containerApp" {
       cpu    = "0.25"
       memory = "0.5Gi"
 
+      env {
+        name = "PERSTORE_B2C_LOGOUT_URL"
+        value = azurerm_container_app.containerApp.ingress[0].fqdn
+      }
+
       dynamic "env" {
         for_each = local.env_variables
         content {

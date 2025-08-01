@@ -17,7 +17,8 @@ module "naming" {
 module "resourceGroup" {
   source = "./modules/resourceGroup"
 
-  name     = module.naming.resource_group.name_unique
+  # name     = module.naming.resource_group.name_unique
+  name     = var.main_resource_group_name
   location = "centralus"
 
   depends_on = [
@@ -243,9 +244,10 @@ module "containerAppPetStoreApp" {
     module.containerAppPetStoreProductService.env,
     {
       PETSTORE_SECURITY_ENABLED: true
+      PETSTOREAPP_B2C_ENABLED: true
       PETSTOREAPP_B2C_BASE_URL: "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
       PERSTORE_B2C_CLIENT_ID: var.b2c_client_id
-      PERSTORE_B2C_SECRET: "${var.b2c_client_secret}"
+      PERSTORE_B2C_SECRET: var.b2c_client_secret
       PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN: var.b2c_user_flow_signup_or_signin_name
       PERSTORE_B2C_USERFLOW_PASSWORD_RESET: var.b2c_user_flow_password_reset_name
     }
