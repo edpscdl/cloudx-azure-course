@@ -1,7 +1,3 @@
-variable "tenant_id" {
-  type = string
-}
-
 variable "application_registration_id" {
   type = string
 }

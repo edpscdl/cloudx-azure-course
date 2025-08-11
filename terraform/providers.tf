@@ -27,5 +27,11 @@ provider "azurerm" {
 }
 
 provider "azuread" {
+  alias = "petStore"
+  tenant_id = var.tenant_id
+}
+
+provider "azuread" {
+  alias = "auth"
   tenant_id = var.b2c_tenant_id
 }

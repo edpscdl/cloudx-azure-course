@@ -18,14 +18,6 @@ variable "b2c_application_name" {
   type = string
 }
 
-variable "b2c_client_id" {
-  type = string
-}
-
-variable "b2c_client_secret" {
-  type = string
-}
-
 variable "b2c_user_flow_signup_or_signin_name" {
   type = string
 }
