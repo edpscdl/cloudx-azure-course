@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-structure
+      author: heorhi
+      changes:
+        - sqlFile:
+            path: classpath:db/changelog/create_structure.sql
+            splitStatements: true
+            endDelimiter: ;
+
+  - changeSet:
+      id: 2-insert-data
+      author: heorhi
+      changes:
+        - sqlFile:
+            path: classpath:db/changelog/insert_data.sql
+            splitStatements: true
+            endDelimiter: ;
