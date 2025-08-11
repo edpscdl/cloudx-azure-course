@@ -1,0 +1,72 @@
+name: 'Function App: Build, Push and Deploy Docker Image'
+
+inputs:
+  module-name:
+    description: 'Name of the Docker image'
+    required: true
+  function-name:
+    description: 'Name of function App'
+    required: true
+  tag:
+    description: 'Name of tag to build and push image'
+    required: true
+  azure-credentials:
+    description: 'Credentials for authentification on Azure'
+    required: true
+  azure-acr-registry-name:
+    description: 'Name of ACR'
+    required: true
+  azure-resource-group:
+    description: 'Name of resource group'
+    required: true
+  azure-acr-registry-username:
+    description: 'Admin user name'
+    required: true
+  azure-acr-registry-password:
+    description: 'Admin password'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Log in to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ inputs.azure-credentials }}
+
+    - name: Login to Azure Container Registry
+      run: |
+        az acr login \
+          --name ${{ inputs.azure-acr-registry-name }}
+      #          --username ${{ inputs.azure-acr-registry-username }} \
+      #          --password ${{ inputs.azure-acr-registry-password }}
+      shell: bash
+
+    - name: ACR Build
+      shell: bash
+      run: |
+        az acr build \
+          --registry ${{ inputs.azure-acr-registry-name }} \
+          --image ${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:${{ inputs.tag }} \
+          ${{ github.workspace }}/${{ inputs.module-name }}
+
+    #    - name: Build Docker Image
+    #      run: |
+    #        docker build -t ${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:${{ inputs.tag }} ${{ github.workspace }}/${{ inputs.module-name }}
+    #      shell: bash
+    #
+    #    - name: Build and Push Docker Image
+    #      run: |
+    #        docker push ${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:${{ inputs.tag }}
+    #      shell: bash
+
+    - name: Update Azure Function App
+      shell: bash
+      run: |
+        az functionapp config container set \
+          --name ${{ inputs.function-name }} \
+          --resource-group ${{ inputs.azure-resource-group }} \
+          --image ${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:${{ inputs.tag }} \
+          --registry-server https://${{ inputs.azure-acr-registry-name }}.azurecr.io \
+          --registry-username ${{ inputs.azure-acr-registry-username }} \
+          --registry-password ${{ inputs.azure-acr-registry-password }}
