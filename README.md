@@ -10,14 +10,10 @@
     - ```az extension add --name serviceconnector-passwordless --upgrade```
     - ```az extension add --name microsoft-entra-admin```
 
-2. Create Azure Active Directory B2C at new tenant.
-    - Copy from new tenant and AAD B2C to ```terraform.tfvars``` next values:
-      - main_resource_group_name
-      - b2c_application_name
-      - b2c_client_id
-      - b2c_client_secret
-      - b2c_user_flow_signup_or_signin_name
-      - b2c_user_flow_password_reset_name
+2. Create Azure Active Directory B2C at new tenant and create users flows with names:
+   - B2C_1_SIGNUP_OR_SIGNIN
+   - B2C_1_PASSWORD_RESET
+   - B2C_1_PROFILE_EDITING
 
 3. Run ```main.ft```
 

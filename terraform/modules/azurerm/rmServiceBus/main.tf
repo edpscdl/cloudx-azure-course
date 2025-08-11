@@ -3,7 +3,7 @@ resource "azurerm_servicebus_namespace" "serviceBusNamespace" {
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  sku = "Standard"
+  sku                = "Standard"
   local_auth_enabled = true
 
   identity {
@@ -17,15 +17,15 @@ resource "azurerm_servicebus_queue" "serviceBusQueue" {
   namespace_id = azurerm_servicebus_namespace.serviceBusNamespace.id
 
   dead_lettering_on_message_expiration = true
-  max_delivery_count = 3
+  max_delivery_count                   = 3
 }
 
 resource "azurerm_servicebus_queue_authorization_rule" "serviceBusQueueAuthorizationRule" {
-  name = "order_history_queue_access"
+  name     = "order_history_queue_access"
   queue_id = azurerm_servicebus_queue.serviceBusQueue.id
 
   listen = true
-  send = true
+  send   = true
   manage = false
 }
 

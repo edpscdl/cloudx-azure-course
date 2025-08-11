@@ -52,3 +52,4 @@ spring:
           user-flows:
             sign-up-or-sign-in: ${PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
             password-reset: ${PERSTORE_B2C_USERFLOW_PASSWORD_RESET}
+            profile-editing: ${PERSTORE_B2C_USERFLOW_PROFILE_EDITING}

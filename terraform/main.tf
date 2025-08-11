@@ -1,15 +1,4 @@
-locals {
-  list_web_app = {
-    petstoreapp = "petstoreapp"
-  }
-  list_web_services = {
-    petstoreorderservice   = "petstoreorderservice"
-    petstorepetservice     = "petstorepetservice"
-    petstoreproductservice = "petstoreproductservice"
-  }
-}
-
-module "naming" {
+module "petStoreNaming" {
   source = "Azure/naming/azurerm"
   suffix = ["ps"]
 }
@@ -17,367 +6,384 @@ module "naming" {
 # module "resourceGroup" {
 #   source = "./modules/resourceGroup"
 #
-#   # name     = module.naming.resource_group.name_unique
+#   # name     = module.petStoreNaming.resource_group.name_unique
 #   name     = var.main_resource_group_name
 #   location = "centralus"
 #
 #   depends_on = [
-#     module.naming
+#     module.petStoreNaming
 #   ]
 # }
 
-data "azurerm_resource_group" "resourceGroup" {
+data "azurerm_resource_group" "petStoreResourceGroup" {
   name = var.main_resource_group_name
 }
 
-module "userAssignedIdentity" {
-  source = "./modules/userAssignedIdentity"
+module "petStoreUserAssignedIdentity" {
+  source = "modules/azurerm/rmUserAssignedIdentity"
 
-  name                = module.naming.user_assigned_identity.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.user_assigned_identity.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
   depends_on = [
-    module.naming
+    module.petStoreNaming
   ]
 }
 
-module "keyVault" {
-  source = "./modules/keyVault"
+module "petStoreKeyVault" {
+  source = "modules/azurerm/rmKeyVault"
 
-  name                = module.naming.key_vault.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.key_vault.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
-  user_assigned_identity_principal_id = module.userAssignedIdentity.principal_id
+  user_assigned_identity_principal_id = module.petStoreUserAssignedIdentity.principal_id
 
   depends_on = [
-    module.naming,
-    module.userAssignedIdentity
+    module.petStoreNaming,
+    module.petStoreUserAssignedIdentity
   ]
 }
 
-module "logAnalyticsWorkspace" {
-  source = "./modules/logAnalyticsWorkspace"
+module "petStoreLogAnalyticsWorkspace" {
+  source = "modules/azurerm/rmLogAnalyticsWorkspace"
 
-  name                = module.naming.log_analytics_workspace.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.log_analytics_workspace.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
-  user_assigned_identity_id = module.userAssignedIdentity.id
+  user_assigned_identity_id = module.petStoreUserAssignedIdentity.id
 
   depends_on = [
-    module.naming,
-    module.userAssignedIdentity
+    module.petStoreNaming,
+    module.petStoreUserAssignedIdentity
   ]
 }
 
-module "applicationInsights" {
-  source = "./modules/applicationInsights"
+module "petStoreApplicationInsights" {
+  source = "modules/azurerm/rmApplicationInsights"
 
-  name                = module.naming.application_insights.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.application_insights.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
-  workspace_id = module.logAnalyticsWorkspace.id
-  key_vault_id = module.keyVault.id
+  workspace_id = module.petStoreLogAnalyticsWorkspace.id
+  key_vault_id = module.petStoreKeyVault.id
 
   depends_on = [
-    module.naming,
-    module.logAnalyticsWorkspace,
-    module.keyVault
+    module.petStoreNaming,
+    module.petStoreLogAnalyticsWorkspace,
+    module.petStoreKeyVault
   ]
 }
 
-module "cosmosdb" {
-  source = "./modules/dataBaseCosmos"
+module "petStoreCosmosDb" {
+  source = "modules/azurerm/rmCosmosDbAccount"
 
-  name                = module.naming.cosmosdb_account.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.cosmosdb_account.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
   database_name             = "petstore"
   container_name            = "orders"
-  user_assigned_identity_id = module.userAssignedIdentity.id
-  key_vault_id              = module.keyVault.id
+  user_assigned_identity_id = module.petStoreUserAssignedIdentity.id
+  key_vault_id              = module.petStoreKeyVault.id
 
   depends_on = [
-    module.naming,
-    module.userAssignedIdentity,
-    module.keyVault
+    module.petStoreNaming,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreKeyVault
   ]
 }
 
-module "containerRegistry" {
-  source = "./modules/containerRegistry"
+module "petStoreContainerRegistry" {
+  source = "modules/azurerm/rmContainerRegistry"
 
-  name                = module.naming.container_registry.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.container_registry.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
-  key_vault_id                        = module.keyVault.id
-  user_assigned_identity_id           = module.userAssignedIdentity.id
-  user_assigned_identity_principal_id = module.userAssignedIdentity.principal_id
+  key_vault_id                        = module.petStoreKeyVault.id
+  user_assigned_identity_id           = module.petStoreUserAssignedIdentity.id
+  user_assigned_identity_principal_id = module.petStoreUserAssignedIdentity.principal_id
 
   depends_on = [
-    module.naming,
-    module.userAssignedIdentity,
-    module.keyVault
+    module.petStoreNaming,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreKeyVault
   ]
 }
 
-module "containerAppEnvironment" {
-  source = "./modules/containerAppEnvironment"
+module "petStoreContainerAppEnvironment" {
+  source = "modules/azurerm/rmContainerAppEnvironment"
 
-  name                = module.naming.container_app_environment.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.container_app_environment.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
-  log_analytics_workspace_id = module.logAnalyticsWorkspace.id
+  log_analytics_workspace_id = module.petStoreLogAnalyticsWorkspace.id
 
   depends_on = [
-    module.naming,
-    module.logAnalyticsWorkspace
+    module.petStoreNaming,
+    module.petStoreLogAnalyticsWorkspace
   ]
 }
 
-module "servicePlanPetStore" {
-  source = "./modules/appServicePlan"
+module "petStoreServicePlan" {
+  source = "modules/azurerm/rmAppServicePlan"
 
-  name                = module.naming.app_service_plan.name_unique
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
-  location            = data.azurerm_resource_group.resourceGroup.location
+  name                = module.petStoreNaming.app_service_plan.name_unique
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
 
   depends_on = [
-    module.naming
+    module.petStoreNaming
   ]
 }
 
-module "storageAccountPetStore" {
-  source = "./modules/storageAccount"
+module "petStoreStorageAccount" {
+  source = "modules/azurerm/rmStorageAccount"
 
-  name                = module.naming.storage_account.name_unique
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
-  location            = data.azurerm_resource_group.resourceGroup.location
+  name                = module.petStoreNaming.storage_account.name_unique
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
 
-  user_assigned_identity_id = module.userAssignedIdentity.id
-  key_vault_id              = module.keyVault.id
+  user_assigned_identity_id = module.petStoreUserAssignedIdentity.id
+  key_vault_id              = module.petStoreKeyVault.id
 
   depends_on = [
-    module.naming,
-    module.userAssignedIdentity,
-    module.keyVault
+    module.petStoreNaming,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreKeyVault
   ]
 }
 
-module "serviceBusPetStore" {
-  source = "./modules/serviceBus"
+module "petStoreServiceBus" {
+  source = "modules/azurerm/rmServiceBus"
 
-  name                = module.naming.storage_account.name_unique
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
-  location            = data.azurerm_resource_group.resourceGroup.location
+  name                = module.petStoreNaming.storage_account.name_unique
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
 
-  user_assigned_identity_id           = module.userAssignedIdentity.id
-  user_assigned_identity_principal_id = module.userAssignedIdentity.principal_id
-  key_vault_id                        = module.keyVault.id
+  user_assigned_identity_id           = module.petStoreUserAssignedIdentity.id
+  user_assigned_identity_principal_id = module.petStoreUserAssignedIdentity.principal_id
+  key_vault_id                        = module.petStoreKeyVault.id
 
   depends_on = [
-    module.naming,
-    module.userAssignedIdentity,
-    module.keyVault
+    module.petStoreNaming,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreKeyVault
   ]
 }
 
-module "functionAppPetStoreOrderReserver" {
-  source = "./modules/functionApp"
+module "petStoreFunctionAppPetStoreOrderReserver" {
+  source = "modules/azurerm/rmFunctionApp"
 
-  name                                               = module.naming.function_app.name_unique
-  resource_group_name                                = data.azurerm_resource_group.resourceGroup.name
+  name                                               = module.petStoreNaming.function_app.name_unique
+  resource_group_name                                = data.azurerm_resource_group.petStoreResourceGroup.name
   application_name                                   = "orderitemsreserver"
-  location                                           = data.azurerm_resource_group.resourceGroup.location
-  service_plan_id                                    = module.servicePlanPetStore.id
-  user_assigned_identity_id                          = module.userAssignedIdentity.id
-  storage_account_name                               = module.storageAccountPetStore.name
-  servicebus_queue_name                              = module.serviceBusPetStore.queue_name
-  key_vault_id                                       = module.keyVault.id
-  secret_name_storage_account_access_key             = module.storageAccountPetStore.secret_name_storage_account_access_key
-  secret_name_storage_account_connection_string      = module.storageAccountPetStore.secret_name_storage_account_connection_string
-  secret_name_application_insights_connection_string = module.applicationInsights.secret_name_connection_string
-  secret_name_container_registry_login_server        = module.containerRegistry.secret_name_login_server
-  secret_name_container_registry_admin_username      = module.containerRegistry.secret_name_admin_username
-  secret_name_container_registry_admin_password      = module.containerRegistry.secret_name_admin_password
-  secret_name_servicebus_queue_connection_string     = module.serviceBusPetStore.secret_name_queue_connection_string
+  location                                           = data.azurerm_resource_group.petStoreResourceGroup.location
+  service_plan_id                                    = module.petStoreServicePlan.id
+  user_assigned_identity_id                          = module.petStoreUserAssignedIdentity.id
+  storage_account_name                               = module.petStoreStorageAccount.name
+  servicebus_queue_name                              = module.petStoreServiceBus.queue_name
+  key_vault_id                                       = module.petStoreKeyVault.id
+  secret_name_storage_account_access_key             = module.petStoreStorageAccount.secret_name_storage_account_access_key
+  secret_name_storage_account_connection_string      = module.petStoreStorageAccount.secret_name_storage_account_connection_string
+  secret_name_application_insights_connection_string = module.petStoreApplicationInsights.secret_name_connection_string
+  secret_name_container_registry_login_server        = module.petStoreContainerRegistry.secret_name_login_server
+  secret_name_container_registry_admin_username      = module.petStoreContainerRegistry.secret_name_admin_username
+  secret_name_container_registry_admin_password      = module.petStoreContainerRegistry.secret_name_admin_password
+  secret_name_servicebus_queue_connection_string     = module.petStoreServiceBus.secret_name_queue_connection_string
 
   depends_on = [
-    module.naming,
-    module.containerRegistry,
-    module.servicePlanPetStore,
-    module.userAssignedIdentity,
-    module.storageAccountPetStore,
-    module.keyVault,
-    module.applicationInsights
+    module.petStoreNaming,
+    module.petStoreContainerRegistry,
+    module.petStoreServicePlan,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreStorageAccount,
+    module.petStoreKeyVault,
+    module.petStoreApplicationInsights
   ]
 }
 
-module "containerAppPetStoreApp" {
-  source = "./modules/containerApp"
+module "petStoreContainerAppPetStoreApp" {
+  source = "modules/azurerm/rmContainerApp"
 
-  name                         = "${module.naming.container_app.name}-${local.list_web_app["petstoreapp"]}"
-  resource_group_name          = data.azurerm_resource_group.resourceGroup.name
+  name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_app["petstoreapp"]}"
+  resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
   application_name             = local.list_web_app["petstoreapp"]
-  container_app_environment_id = module.containerAppEnvironment.id
+  container_app_environment_id = module.petStoreContainerAppEnvironment.id
 
-  key_vault_id                                       = module.keyVault.id
-  secret_name_application_insights_connection_string = module.applicationInsights.secret_name_connection_string
-  secret_name_container_registry_login_server        = module.containerRegistry.secret_name_login_server
-  user_assigned_identity_id                          = module.userAssignedIdentity.id
+  key_vault_id                                       = module.petStoreKeyVault.id
+  secret_name_application_insights_connection_string = module.petStoreApplicationInsights.secret_name_connection_string
+  secret_name_container_registry_login_server        = module.petStoreContainerRegistry.secret_name_login_server
+  user_assigned_identity_id                          = module.petStoreUserAssignedIdentity.id
   enviroment_variables = merge(
-    module.containerAppPetStoreOrderService.env,
-    module.containerAppPetstorePetService.env,
-    module.containerAppPetStoreProductService.env,
+    module.petStoreContainerAppPetStoreOrderService.env,
+    module.petStoreContainerAppPetstorePetService.env,
+    module.petStoreContainerAppPetStoreProductService.env,
     {
       PETSTORE_SECURITY_ENABLED : true
       PETSTOREAPP_B2C_ENABLED : true
-      PERSTORE_B2C_BASE_URI : "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
-      PERSTORE_B2C_CLIENT_ID : var.b2c_client_id
-      PERSTORE_B2C_SECRET : var.b2c_client_secret
+      PERSTORE_B2C_BASE_URI : "https://${module.adApplicationRegistration.display_name}.b2clogin.com/${module.adApplicationRegistration.display_name}.onmicrosoft.com/"
+      PERSTORE_B2C_CLIENT_ID : module.adApplicationRegistration.client_id
+      PERSTORE_B2C_SECRET : module.adApplicationPassword.value
       PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN : var.b2c_user_flow_signup_or_signin_name
       PERSTORE_B2C_USERFLOW_PASSWORD_RESET : var.b2c_user_flow_password_reset_name
+      PERSTORE_B2C_USERFLOW_PROFILE_EDITING : var.b2c_user_flow_profile_editing_name
     }
   )
 
   depends_on = [
-    module.naming,
-    module.applicationInsights,
-    module.containerAppEnvironment,
-    module.containerRegistry,
-    module.keyVault,
-    module.userAssignedIdentity,
-    module.containerAppPetStoreOrderService,
-    module.containerAppPetstorePetService,
-    module.containerAppPetStoreProductService
+    module.petStoreNaming,
+    module.petStoreApplicationInsights,
+    module.petStoreContainerAppEnvironment,
+    module.petStoreContainerRegistry,
+    module.petStoreKeyVault,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreContainerAppPetStoreOrderService,
+    module.petStoreContainerAppPetstorePetService,
+    module.petStoreContainerAppPetStoreProductService,
+    module.adApplicationRegistration
   ]
 }
 
-module "containerAppPetStoreOrderService" {
-  source = "./modules/containerApp"
+module "petStoreContainerAppPetStoreOrderService" {
+  source = "modules/azurerm/rmContainerApp"
 
-  name                         = "${module.naming.container_app.name}-${local.list_web_services["petstoreorderservice"]}"
-  resource_group_name          = data.azurerm_resource_group.resourceGroup.name
+  name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstoreorderservice"]}"
+  resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
   application_name             = local.list_web_services["petstoreorderservice"]
-  container_app_environment_id = module.containerAppEnvironment.id
+  container_app_environment_id = module.petStoreContainerAppEnvironment.id
 
-  key_vault_id                                       = module.keyVault.id
-  secret_name_application_insights_connection_string = module.applicationInsights.secret_name_connection_string
-  secret_name_container_registry_login_server        = module.containerRegistry.secret_name_login_server
-  user_assigned_identity_id                          = module.userAssignedIdentity.id
+  key_vault_id                                       = module.petStoreKeyVault.id
+  secret_name_application_insights_connection_string = module.petStoreApplicationInsights.secret_name_connection_string
+  secret_name_container_registry_login_server        = module.petStoreContainerRegistry.secret_name_login_server
+  user_assigned_identity_id                          = module.petStoreUserAssignedIdentity.id
   enviroment_variables = merge(
-    module.containerAppPetStoreProductService.env,
-    module.keyVault.env,
-    module.userAssignedIdentity.env,
-    module.serviceBusPetStore.env
+    module.petStoreContainerAppPetStoreProductService.env,
+    module.petStoreKeyVault.env,
+    module.petStoreUserAssignedIdentity.env,
+    module.petStoreServiceBus.env
   )
 
   depends_on = [
-    module.naming,
-    module.applicationInsights,
-    module.containerAppEnvironment,
-    module.containerRegistry,
-    module.keyVault,
-    module.userAssignedIdentity,
-    module.containerAppPetStoreProductService
+    module.petStoreNaming,
+    module.petStoreApplicationInsights,
+    module.petStoreContainerAppEnvironment,
+    module.petStoreContainerRegistry,
+    module.petStoreKeyVault,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreContainerAppPetStoreProductService
   ]
 }
 
-module "containerAppPetstorePetService" {
-  source = "./modules/containerApp"
+module "petStoreContainerAppPetstorePetService" {
+  source = "modules/azurerm/rmContainerApp"
 
-  name                         = "${module.naming.container_app.name}-${local.list_web_services["petstorepetservice"]}"
-  resource_group_name          = data.azurerm_resource_group.resourceGroup.name
+  name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstorepetservice"]}"
+  resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
   application_name             = local.list_web_services["petstorepetservice"]
-  container_app_environment_id = module.containerAppEnvironment.id
+  container_app_environment_id = module.petStoreContainerAppEnvironment.id
 
-  key_vault_id                                       = module.keyVault.id
-  secret_name_application_insights_connection_string = module.applicationInsights.secret_name_connection_string
-  secret_name_container_registry_login_server        = module.containerRegistry.secret_name_login_server
-  user_assigned_identity_id                          = module.userAssignedIdentity.id
+  key_vault_id                                       = module.petStoreKeyVault.id
+  secret_name_application_insights_connection_string = module.petStoreApplicationInsights.secret_name_connection_string
+  secret_name_container_registry_login_server        = module.petStoreContainerRegistry.secret_name_login_server
+  user_assigned_identity_id                          = module.petStoreUserAssignedIdentity.id
   enviroment_variables = merge(
-    module.keyVault.env,
-    module.userAssignedIdentity.env
+    module.petStoreKeyVault.env,
+    module.petStoreUserAssignedIdentity.env
   )
 
   depends_on = [
-    module.naming,
-    module.applicationInsights,
-    module.containerAppEnvironment,
-    module.containerRegistry,
-    module.keyVault,
-    module.userAssignedIdentity
+    module.petStoreNaming,
+    module.petStoreApplicationInsights,
+    module.petStoreContainerAppEnvironment,
+    module.petStoreContainerRegistry,
+    module.petStoreKeyVault,
+    module.petStoreUserAssignedIdentity
   ]
 }
 
-module "containerAppPetStoreProductService" {
-  source = "./modules/containerApp"
+module "petStoreContainerAppPetStoreProductService" {
+  source = "modules/azurerm/rmContainerApp"
 
-  name                         = "${module.naming.container_app.name}-${local.list_web_services["petstoreproductservice"]}"
-  resource_group_name          = data.azurerm_resource_group.resourceGroup.name
+  name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstoreproductservice"]}"
+  resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
   application_name             = local.list_web_services["petstoreproductservice"]
-  container_app_environment_id = module.containerAppEnvironment.id
+  container_app_environment_id = module.petStoreContainerAppEnvironment.id
 
-  key_vault_id                                       = module.keyVault.id
-  secret_name_application_insights_connection_string = module.applicationInsights.secret_name_connection_string
-  secret_name_container_registry_login_server        = module.containerRegistry.secret_name_login_server
-  user_assigned_identity_id                          = module.userAssignedIdentity.id
+  key_vault_id                                       = module.petStoreKeyVault.id
+  secret_name_application_insights_connection_string = module.petStoreApplicationInsights.secret_name_connection_string
+  secret_name_container_registry_login_server        = module.petStoreContainerRegistry.secret_name_login_server
+  user_assigned_identity_id                          = module.petStoreUserAssignedIdentity.id
   enviroment_variables = merge(
-    module.keyVault.env,
-    module.userAssignedIdentity.env
+    module.petStoreKeyVault.env,
+    module.petStoreUserAssignedIdentity.env
   )
 
   depends_on = [
-    module.naming,
-    module.applicationInsights,
-    module.containerAppEnvironment,
-    module.containerRegistry,
-    module.keyVault,
-    module.userAssignedIdentity
+    module.petStoreNaming,
+    module.petStoreApplicationInsights,
+    module.petStoreContainerAppEnvironment,
+    module.petStoreContainerRegistry,
+    module.petStoreKeyVault,
+    module.petStoreUserAssignedIdentity
   ]
 }
 
-module "postgresql" {
-  source = "./modules/dataBasePostgreSql"
+module "petStorePostgresql" {
+  source = "modules/azurerm/rmPostgresqlFlexibleServer"
 
-  name                = module.naming.postgresql_database.name_unique
-  location            = data.azurerm_resource_group.resourceGroup.location
-  resource_group_name = data.azurerm_resource_group.resourceGroup.name
+  name                = module.petStoreNaming.postgresql_database.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
 
-  user_assigned_identity_id = module.userAssignedIdentity.id
-  key_vault_id              = module.keyVault.id
+  user_assigned_identity_id = module.petStoreUserAssignedIdentity.id
+  key_vault_id              = module.petStoreKeyVault.id
 
   inbound_ip_addresses = {
-    (module.containerAppPetstorePetService.name) : module.containerAppPetstorePetService.outbound_ip_address
-    (module.containerAppPetStoreProductService.name) : module.containerAppPetStoreProductService.outbound_ip_address
+    (module.petStoreContainerAppPetstorePetService.name) : module.petStoreContainerAppPetstorePetService.outbound_ip_address
+    (module.petStoreContainerAppPetStoreProductService.name) : module.petStoreContainerAppPetStoreProductService.outbound_ip_address
   }
 
   depends_on = [
-    module.naming,
-    module.userAssignedIdentity,
-    module.keyVault,
-    module.containerAppPetstorePetService,
-    module.containerAppPetStoreProductService
+    module.petStoreNaming,
+    module.petStoreUserAssignedIdentity,
+    module.petStoreKeyVault,
+    module.petStoreContainerAppPetstorePetService,
+    module.petStoreContainerAppPetStoreProductService
   ]
 }
 
-module "managedApplicationPetStoreGitHub" {
-  source = "./modules/managedApplication"
+module "petStoreEntraIdApplication" {
+  source    = "./modules/azuread/adApplication"
+  tenant_id = var.b2c_tenant_id
 
   name = "heorhi_utseuski_github_actions"
 }
 
-module "rbacAssigmentsResourceGroup" {
-  source = "./modules/roleAssignment"
+# module "petStoreEntraIdServicePrincipal" {
+#   source = "./modules/azuread/adServicePrincipal"
+#   tenant_id = var.b2c_tenant_id
+#
+#   client_id = module.petStoreEntraIdApplication.client_id
+# }
 
-  assignee = module.managedApplicationPetStoreGitHub.client_id
-  scope = data.azurerm_resource_group.resourceGroup.id
+module "petStoreEntraIdApplicationPassword" {
+  source    = "./modules/azuread/adApplicationPassword"
+  tenant_id = var.b2c_tenant_id
+
+  application_id = module.petStoreEntraIdApplication.id
+}
+
+module "petStoreRoleAssigmentResourceGroup" {
+  source = "modules/azurerm/rmRoleAssignment"
+
+  assignee = module.petStoreEntraIdApplication.client_id
+  scope    = data.azurerm_resource_group.petStoreResourceGroup.id
   roles = [
     "Container Apps Contributor",
     "Web Plan Contributor",
@@ -385,22 +391,56 @@ module "rbacAssigmentsResourceGroup" {
   ]
 
   depends_on = [
-    module.managedApplicationPetStoreGitHub
+    module.petStoreEntraIdApplication
   ]
 }
 
-module "rbacAssigmentsContainerRegistry" {
-  source = "./modules/roleAssignment"
+module "petStoreRoleAssigmentContainerRegistry" {
+  source = "modules/azurerm/rmRoleAssignment"
 
-  assignee = module.managedApplicationPetStoreGitHub.client_id
-  scope = module.containerRegistry.id
+  assignee = module.petStoreEntraIdApplication.client_id
+  scope    = module.petStoreContainerRegistry.id
   roles = [
     "AcrPush",
     "Contributor"
   ]
 
   depends_on = [
-    module.managedApplicationPetStoreGitHub,
-    module.containerRegistry
+    module.petStoreEntraIdApplication,
+    module.petStoreContainerRegistry
+  ]
+}
+
+module "adApplicationRegistration" {
+  source    = "./modules/azuread/adApplicationRegistration"
+  tenant_id = var.b2c_tenant_id
+
+  display_name = var.b2c_application_name
+}
+
+module "adApplicationPassword" {
+  source    = "./modules/azuread/adApplicationPassword"
+  tenant_id = var.b2c_tenant_id
+
+  application_id = module.adApplicationRegistration.id
+  display_name   = "rbac"
+
+  depends_on = [
+    module.adApplicationRegistration
+  ]
+}
+
+module "adApplicationRedirectUris" {
+  source    = "./modules/azuread/adApplicationRedirectUris"
+  tenant_id = var.b2c_tenant_id
+
+  application_registration_id = module.adApplicationRegistration.id
+  type                        = "Web"
+  redirect_uris = [
+    module.petStoreContainerAppPetStoreApp.url
+  ]
+
+  depends_on = [
+    module.adApplicationRegistration
   ]
 }
