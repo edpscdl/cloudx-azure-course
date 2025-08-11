@@ -224,6 +224,7 @@ module "petStoreContainerAppPetStoreApp" {
     module.petStoreContainerAppPetStoreOrderService.env,
     module.petStoreContainerAppPetstorePetService.env,
     module.petStoreContainerAppPetStoreProductService.env,
+    module.petStoreFunctionAppPetStoreOrderReserver.env,
     {
       PETSTORE_SECURITY_ENABLED : true
       PETSTOREAPP_B2C_ENABLED : true
