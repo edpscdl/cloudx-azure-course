@@ -366,14 +366,19 @@ module "petStoreEntraIdApplication" {
   }
 
   name = "heorhi_utseuski_github_actions"
+  owners = [data.azurerm_client_config.currentRm.object_id]
 }
 
-# module "petStoreEntraIdServicePrincipal" {
-#   source = "./modules/azuread/adServicePrincipal"
-#   tenant_id = var.b2c_tenant_id
-#
-#   client_id = module.petStoreEntraIdApplication.client_id
-# }
+module "petStoreEntraIdServicePrincipal" {
+  source = "./modules/azuread/adServicePrincipal"
+
+  providers = {
+    azuread = azuread.petStore
+  }
+
+  client_id = module.petStoreEntraIdApplication.client_id
+  owners = [data.azurerm_client_config.currentRm.object_id]
+}
 
 module "petStoreEntraIdApplicationPassword" {
   source    = "./modules/azuread/adApplicationPassword"
@@ -388,7 +393,7 @@ module "petStoreEntraIdApplicationPassword" {
 module "petStoreRoleAssigmentResourceGroup" {
   source = "./modules/azurerm/rmRoleAssignment"
 
-  assignee = module.petStoreEntraIdApplication.client_id
+  assignee = module.petStoreEntraIdServicePrincipal.object_id
   scope    = data.azurerm_resource_group.petStoreResourceGroup.id
   roles = [
     "Container Apps Contributor",
@@ -404,7 +409,7 @@ module "petStoreRoleAssigmentResourceGroup" {
 module "petStoreRoleAssigmentContainerRegistry" {
   source = "./modules/azurerm/rmRoleAssignment"
 
-  assignee = module.petStoreEntraIdApplication.client_id
+  assignee = module.petStoreEntraIdServicePrincipal.object_id
   scope    = module.petStoreContainerRegistry.id
   roles = [
     "AcrPush",

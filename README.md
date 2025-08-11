@@ -21,6 +21,13 @@
     - ```cd ./terraform```
     - ```terraform output secrets```
 
+5. Add roles to resources:
+    - ```az role assignment create --assignee <client_id> --role "Container Apps Contributor" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>```
+    - ```az role assignment create --assignee <client_id> --role "Web Plan Contributor" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>```
+    - ```az role assignment create --assignee <client_id> --role "Website Contributor" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>```
+    - ```az role assignment create --assignee <client_id> --role "AcrPush" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.ContainerRegistry/registries/<acr_name>```
+    - ```az role assignment create --assignee <client_id> --role "Contributor" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.ContainerRegistry/registries/<acr_name>```
+
 6. In GitHub, create the following environment variables:
    - ```AZURE_ACR_REGISTRY_NAME```
    - ```AZURE_RESOURCE_GROUP```
