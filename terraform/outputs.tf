@@ -8,8 +8,8 @@ output "secrets" {
     AZURE_CREDENTIALS : jsonencode({
       clientId       = module.petStoreEntraIdApplication.client_id
       clientSecret   = module.petStoreEntraIdApplicationPassword.value
-      subscriptionId = data.azurerm_client_config.currentRm.subscription_id
-      tenantId       = data.azurerm_client_config.currentRm.tenant_id
+      subscriptionId = data.azurerm_client_config.current.subscription_id
+      tenantId       = data.azurerm_client_config.current.tenant_id
     })
   }
   sensitive = true

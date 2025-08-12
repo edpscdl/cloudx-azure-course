@@ -367,7 +367,7 @@ module "petStoreEntraIdApplication" {
   }
 
   name = "heorhi_utseuski_github_actions"
-  owners = [data.azurerm_client_config.currentRm.object_id]
+  owners = [data.azurerm_client_config.current.object_id]
 }
 
 module "petStoreEntraIdServicePrincipal" {
@@ -378,7 +378,7 @@ module "petStoreEntraIdServicePrincipal" {
   }
 
   client_id = module.petStoreEntraIdApplication.client_id
-  owners = [data.azurerm_client_config.currentRm.object_id]
+  owners = [data.azurerm_client_config.current.object_id]
 }
 
 module "petStoreEntraIdApplicationPassword" {
@@ -431,6 +431,28 @@ module "adApplicationRegistration" {
   }
 
   display_name = var.b2c_application_name
+}
+
+module "adApplicationOwner" {
+  source = "./modules/azuread/adApplicationOwner"
+
+  providers = {
+    azuread = azuread.auth
+  }
+
+  application_id = module.adApplicationRegistration.id
+  owner_object_id = data.azuread_client_config.current.object_id
+}
+
+module "adServicePrincipal" {
+  source = "./modules/azuread/adServicePrincipal"
+
+  providers = {
+    azuread = azuread.auth
+  }
+
+  client_id = module.adApplicationRegistration.client_id
+  owners = [data.azuread_client_config.current.object_id]
 }
 
 module "adApplicationPassword" {

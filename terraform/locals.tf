@@ -9,4 +9,5 @@ locals {
   }
 }
 
-data "azurerm_client_config" "currentRm" {}
+data "azurerm_client_config" "current" {}
+data "azuread_client_config" "current" {}
