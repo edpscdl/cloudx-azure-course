@@ -228,7 +228,7 @@ module "petStoreContainerAppPetStoreApp" {
     {
       PETSTORE_SECURITY_ENABLED : true
       PETSTOREAPP_B2C_ENABLED : true
-      PERSTORE_B2C_BASE_URI : "https://${module.adApplicationRegistration.display_name}.b2clogin.com/${module.adApplicationRegistration.display_name}.onmicrosoft.com/"
+      PERSTORE_B2C_BASE_URI : "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
       PERSTORE_B2C_CLIENT_ID : module.adApplicationRegistration.client_id
       PERSTORE_B2C_SECRET : module.adApplicationPassword.value
       PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN : var.b2c_user_flow_signup_or_signin_name
@@ -430,7 +430,7 @@ module "adApplicationRegistration" {
     azuread = azuread.auth
   }
 
-  display_name = var.b2c_application_name
+  display_name = var.b2c_registration_name
 }
 
 module "adApplicationOwner" {
