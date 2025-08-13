@@ -47,7 +47,7 @@ spring:
           credential:
             client-id: ${PERSTORE_B2C_CLIENT_ID}
             client-secret: ${PERSTORE_B2C_CLIENT_SECRET}
-          login-flow: ${PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
+          login-flow: "sign-up-or-sign-in"
 #          logout-success-url: ${PERSTORE_B2C_LOGOUT_URL}
           user-flows:
             sign-up-or-sign-in: ${PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
