@@ -370,7 +370,7 @@ module "b2cApplicationRedirectionUris" {
   source = "./modules/azuread/adRedirectUris"
 
   applicationRegistrationId = module.b2cApplication.application_registration_id
-  redirectUris = [module.petStoreContainerAppPetStoreApp.url]
+  redirectUris = ["https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/login/oauth2/code/"]
 
   depends_on = [
     module.b2cApplication,
