@@ -21,6 +21,19 @@
     - ```cd ./terraform```
     - ```terraform output secrets```
 
+5. Create service principal for github actions and save response:
+   - ```az ad sp create-for-rbac --name "heorhi_utseuski_github_actions" --json-auth```
+   
+   _response should be view like this:_ 
+    ```json5
+    {
+        "clientId":"<client_id>",
+        "clientSecret":"<client_secret>",
+        "subscriptionId":"<subscription_id>",
+        "tenantId":"<tenant_id>"
+    }
+```
+
 5. Add roles to resources:
     - ```az role assignment create --assignee <client_id> --role "Container Apps Contributor" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>```
     - ```az role assignment create --assignee <client_id> --role "Web Plan Contributor" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>```

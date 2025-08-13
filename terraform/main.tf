@@ -229,8 +229,8 @@ module "petStoreContainerAppPetStoreApp" {
       PETSTORE_SECURITY_ENABLED : true
       PETSTOREAPP_B2C_ENABLED : true
       PERSTORE_B2C_BASE_URI : "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
-      PERSTORE_B2C_CLIENT_ID : module.adApplicationRegistration.client_id
-      PERSTORE_B2C_SECRET : module.adApplicationPassword.value
+      PERSTORE_B2C_CLIENT_ID : module.b2cApplication.client_id
+      PERSTORE_B2C_CLIENT_SECRET : module.b2cApplication.client_secret
       PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN : var.b2c_user_flow_signup_or_signin_name
       PERSTORE_B2C_USERFLOW_PASSWORD_RESET : var.b2c_user_flow_password_reset_name
       PERSTORE_B2C_USERFLOW_PROFILE_EDITING : var.b2c_user_flow_profile_editing_name
@@ -247,7 +247,7 @@ module "petStoreContainerAppPetStoreApp" {
     module.petStoreContainerAppPetStoreOrderService,
     module.petStoreContainerAppPetstorePetService,
     module.petStoreContainerAppPetStoreProductService,
-    module.adApplicationRegistration
+    module.b2cApplication
   ]
 }
 
@@ -359,131 +359,21 @@ module "petStorePostgresql" {
   ]
 }
 
-module "petStoreEntraIdApplication" {
-  source    = "./modules/azuread/adApplication"
+module "b2cApplication" {
+  source = "./modules/azuread/adApplication"
 
-  providers = {
-    azuread = azuread.petStore
-  }
-
-  name = "heorhi_utseuski_github_actions"
-  owners = [data.azurerm_client_config.current.object_id]
+  applicationPasswordDisplayName = "rbac_b2c"
+  applicationRegistrationDisplayName = var.b2c_application_name
 }
 
-module "petStoreEntraIdServicePrincipal" {
-  source = "./modules/azuread/adServicePrincipal"
+module "b2cApplicationRedirectionUris" {
+  source = "./modules/azuread/adRedirectUris"
 
-  providers = {
-    azuread = azuread.petStore
-  }
-
-  client_id = module.petStoreEntraIdApplication.client_id
-  owners = [data.azurerm_client_config.current.object_id]
-}
-
-module "petStoreEntraIdApplicationPassword" {
-  source    = "./modules/azuread/adApplicationPassword"
-
-  providers = {
-    azuread = azuread.petStore
-  }
-
-  application_id = module.petStoreEntraIdApplication.id
-}
-
-module "petStoreRoleAssigmentResourceGroup" {
-  source = "./modules/azurerm/rmRoleAssignment"
-
-  assignee = module.petStoreEntraIdServicePrincipal.object_id
-  scope    = data.azurerm_resource_group.petStoreResourceGroup.id
-  roles = [
-    "Container Apps Contributor",
-    "Web Plan Contributor",
-    "Website Contributor"
-  ]
+  applicationRegistrationId = module.b2cApplication.application_registration_id
+  redirectUris = [module.petStoreContainerAppPetStoreApp.url]
 
   depends_on = [
-    module.petStoreEntraIdApplication
-  ]
-}
-
-module "petStoreRoleAssigmentContainerRegistry" {
-  source = "./modules/azurerm/rmRoleAssignment"
-
-  assignee = module.petStoreEntraIdServicePrincipal.object_id
-  scope    = module.petStoreContainerRegistry.id
-  roles = [
-    "AcrPush",
-    "Contributor"
-  ]
-
-  depends_on = [
-    module.petStoreEntraIdApplication,
-    module.petStoreContainerRegistry
-  ]
-}
-
-module "adApplicationRegistration" {
-  source    = "./modules/azuread/adApplicationRegistration"
-
-  providers = {
-    azuread = azuread.auth
-  }
-
-  display_name = var.b2c_registration_name
-}
-
-module "adApplicationOwner" {
-  source = "./modules/azuread/adApplicationOwner"
-
-  providers = {
-    azuread = azuread.auth
-  }
-
-  application_id = module.adApplicationRegistration.id
-  owner_object_id = data.azuread_client_config.current.object_id
-}
-
-module "adServicePrincipal" {
-  source = "./modules/azuread/adServicePrincipal"
-
-  providers = {
-    azuread = azuread.auth
-  }
-
-  client_id = module.adApplicationRegistration.client_id
-  owners = [data.azuread_client_config.current.object_id]
-}
-
-module "adApplicationPassword" {
-  source    = "./modules/azuread/adApplicationPassword"
-
-  providers = {
-    azuread = azuread.auth
-  }
-
-  application_id = module.adApplicationRegistration.id
-  display_name   = "rbac"
-
-  depends_on = [
-    module.adApplicationRegistration
-  ]
-}
-
-module "adApplicationRedirectUris" {
-  source    = "./modules/azuread/adApplicationRedirectUris"
-
-  providers = {
-    azuread = azuread.auth
-  }
-
-  application_registration_id = module.adApplicationRegistration.id
-  type                        = "Web"
-  redirect_uris = [
-    module.petStoreContainerAppPetStoreApp.url
-  ]
-
-  depends_on = [
-    module.adApplicationRegistration
+    module.b2cApplication,
+    module.petStoreContainerAppPetStoreApp
   ]
 }

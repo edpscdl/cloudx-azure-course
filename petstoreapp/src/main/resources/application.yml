@@ -46,7 +46,7 @@ spring:
           base-uri: ${PERSTORE_B2C_BASE_URI}
           credential:
             client-id: ${PERSTORE_B2C_CLIENT_ID}
-            client-secret: ${PERSTORE_B2C_SECRET}
+            client-secret: ${PERSTORE_B2C_CLIENT_SECRET}
 #          login-flow: ${PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
 #          logout-success-url: ${PERSTORE_B2C_LOGOUT_URL}
           user-flows:

@@ -1,7 +1,7 @@
-variable "name" {
+variable "applicationRegistrationDisplayName" {
   type = string
 }
 
-variable "owners" {
-  type = list(string)
+variable "applicationPasswordDisplayName" {
+  type = string
 }
