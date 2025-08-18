@@ -52,3 +52,4 @@ spring:
             sign-up-or-sign-in: ${PETSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
             password-reset: ${PETSTORE_B2C_USERFLOW_PASSWORD_RESET}
             profile-editing: ${PETSTORE_B2C_USERFLOW_PROFILE_EDITING}
+          reply-url: ${PETSTORE_B2C_REPLY_URL}
