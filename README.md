@@ -10,6 +10,9 @@
     - ```az extension add --name serviceconnector-passwordless --upgrade```
     - ```az extension add --name microsoft-entra-admin```
 
+2. Create resource group:
+    - ```az group create --name <resource_group_name> --location <location>```
+
 2. Create Azure Active Directory B2C at new tenant and create users flows with names:
    - B2C_1_SIGNUP_OR_SIGNIN
    - B2C_1_PASSWORD_RESET

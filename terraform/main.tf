@@ -228,12 +228,12 @@ module "petStoreContainerAppPetStoreApp" {
     {
       PETSTORE_SECURITY_ENABLED : true
       PETSTOREAPP_B2C_ENABLED : true
-      PERSTORE_B2C_BASE_URI : "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
-      PERSTORE_B2C_CLIENT_ID : module.b2cApplication.client_id
-      PERSTORE_B2C_CLIENT_SECRET : module.b2cApplication.client_secret
-      PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN : var.b2c_user_flow_signup_or_signin_name
-      PERSTORE_B2C_USERFLOW_PASSWORD_RESET : var.b2c_user_flow_password_reset_name
-      PERSTORE_B2C_USERFLOW_PROFILE_EDITING : var.b2c_user_flow_profile_editing_name
+      PETSTORE_B2C_BASE_URI : "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
+      PETSTORE_B2C_CLIENT_ID : module.b2cApplication.client_id
+      PETSTORE_B2C_CLIENT_SECRET : module.b2cApplication.client_secret
+      PETSTORE_B2C_USERFLOW_SIGNUP_SIGNIN : var.b2c_user_flow_signup_or_signin_name
+      PETSTORE_B2C_USERFLOW_PASSWORD_RESET : var.b2c_user_flow_password_reset_name
+      PETSTORE_B2C_USERFLOW_PROFILE_EDITING : var.b2c_user_flow_profile_editing_name
     }
   )
 
