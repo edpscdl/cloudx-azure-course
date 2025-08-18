@@ -10,7 +10,7 @@ petstore:
         url: ${ORDERITEMSRESERVER_URL:http://localhost:8084}
   security:
     # Enable this together with 'cloud.azure.active-directory.b2c.enabled = true' in Module 10
-    enabled: ${PETSTORE_SECURITY_ENABLED:true}
+    enabled: ${PETSTORE_SECURITY_ENABLED:false}
 server:
   port: ${PETSTOREAPP_SERVER_PORT:8080}
 management:
@@ -48,8 +48,9 @@ spring:
             client-id: ${PETSTORE_B2C_CLIENT_ID}
             client-secret: ${PETSTORE_B2C_CLIENT_SECRET}
           login-flow: sign-up-or-sign-in
+#          logout-success-url: ${PETSTORE_B2C_LOGOUT_SUCCESS_URL}
           user-flows:
-            sign-up-or-sign-in: ${PETSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
-            password-reset: ${PETSTORE_B2C_USERFLOW_PASSWORD_RESET}
-            profile-editing: ${PETSTORE_B2C_USERFLOW_PROFILE_EDITING}
-          reply-url: ${PETSTORE_B2C_REPLY_URL}
+            sign-up-or-sign-in: ${PETSTORE_B2C_USERFLOW_SIGNUP_SIGNIN:B2C_1_SIGNUP_OR_SIGNIN}
+            password-reset: ${PETSTORE_B2C_USERFLOW_PASSWORD_RESET:B2C_1_PASSWORD_RESET}
+            profile-editing: ${PETSTORE_B2C_USERFLOW_PROFILE_EDITING:B2C_1_PROFILE_EDITING}
+#          reply-url: ${PETSTORE_B2C_REPLY_URL}
