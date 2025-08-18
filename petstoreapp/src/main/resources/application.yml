@@ -43,12 +43,12 @@ spring:
       active-directory:
         b2c:
           enabled: ${PETSTOREAPP_B2C_ENABLED:false}
-          base-uri: ${PERSTORE_B2C_BASE_URI}
+          base-uri: ${PETSTORE_B2C_BASE_URI}
           credential:
-            client-id: ${PERSTORE_B2C_CLIENT_ID}
-            client-secret: ${PERSTORE_B2C_CLIENT_SECRET}
+            client-id: ${PETSTORE_B2C_CLIENT_ID}
+            client-secret: ${PETSTORE_B2C_CLIENT_SECRET}
           login-flow: sign-up-or-sign-in
           user-flows:
-            sign-up-or-sign-in: ${PERSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
-            password-reset: ${PERSTORE_B2C_USERFLOW_PASSWORD_RESET}
-            profile-editing: ${PERSTORE_B2C_USERFLOW_PROFILE_EDITING}
+            sign-up-or-sign-in: ${PETSTORE_B2C_USERFLOW_SIGNUP_SIGNIN}
+            password-reset: ${PETSTORE_B2C_USERFLOW_PASSWORD_RESET}
+            profile-editing: ${PETSTORE_B2C_USERFLOW_PROFILE_EDITING}
