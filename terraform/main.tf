@@ -231,9 +231,12 @@ module "petStoreContainerAppPetStoreApp" {
       PETSTORE_B2C_BASE_URI : "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
       PETSTORE_B2C_CLIENT_ID : module.b2cApplication.client_id
       PETSTORE_B2C_CLIENT_SECRET : module.b2cApplication.client_secret
+      PETSTORE_B2C_LOGOUT_SUCCESS_URL: "https://${module.petStoreNaming.container_app.name}-${local.list_web_app["petstoreapp"]}.${module.petStoreContainerAppEnvironment.default_domain}/"
+      PETSTORE_B2C_REPLY_URL: "https://${module.petStoreNaming.container_app.name}-${local.list_web_app["petstoreapp"]}.${module.petStoreContainerAppEnvironment.default_domain}/login/oauth2/code/"
       PETSTORE_B2C_USERFLOW_SIGNUP_SIGNIN : var.b2c_user_flow_signup_or_signin_name
       PETSTORE_B2C_USERFLOW_PASSWORD_RESET : var.b2c_user_flow_password_reset_name
       PETSTORE_B2C_USERFLOW_PROFILE_EDITING : var.b2c_user_flow_profile_editing_name
+      # PETSTORE_B2C_REPLY_URL: "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/login/oauth2/code/"
     }
   )
 
@@ -370,7 +373,7 @@ module "b2cApplicationRedirectionUris" {
   source = "./modules/azuread/adRedirectUris"
 
   applicationRegistrationId = module.b2cApplication.application_registration_id
-  redirectUris = ["https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/login/oauth2/code/"]
+  redirectUris = ["${module.petStoreContainerAppPetStoreApp.url}/login/oauth2/code/"]
 
   depends_on = [
     module.b2cApplication,

@@ -22,10 +22,6 @@ variable "b2c_application_name" {
   type = string
 }
 
-variable "b2c_registration_name" {
-  type = string
-}
-
 variable "b2c_user_flow_signup_or_signin_name" {
   type = string
 }
