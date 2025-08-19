@@ -2,7 +2,7 @@ data "azuread_client_config" "current" {}
 
 resource "azuread_application_registration" "applicationRegistration" {
   display_name       = var.applicationRegistrationDisplayName
-  sign_in_audience   = "AzureADandPersonalMicrosoftAccount"
+  sign_in_audience   = "AzureADMyOrg"
 }
 
 resource "azuread_application_owner" "applicationOwner" {
