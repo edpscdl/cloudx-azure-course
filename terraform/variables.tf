@@ -2,10 +2,6 @@ variable "main_resource_group_name" {
   type = string
 }
 
-variable "main_resource_group_location" {
-  type = string
-}
-
 variable "subscription_id" {
   type = string
 }
@@ -19,6 +15,14 @@ variable "b2c_tenant_id" {
 }
 
 variable "b2c_application_name" {
+  type = string
+}
+
+variable "b2c_client_id" {
+  type = string
+}
+
+variable "b2c_client_secret" {
   type = string
 }
 

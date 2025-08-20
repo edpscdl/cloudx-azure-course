@@ -14,9 +14,14 @@
     - ```az group create --name <resource_group_name> --location <location>```
 
 2. Create Azure Active Directory B2C at new tenant and create users flows with names:
-   - B2C_1_SIGNUP_OR_SIGNIN
-   - B2C_1_PASSWORD_RESET
-   - B2C_1_PROFILE_EDITING
+    - B2C_1_SIGNUP_OR_SIGNIN (add Display Name, Email Address, Email Addresses and User's Object ID)
+    - B2C_1_PASSWORD_RESET (add Display Name, Email Addresses and User's Object ID)
+    - B2C_1_PROFILE_EDITING (add Display Name, Email Addresses and User's Object ID)
+    - Create App registration.
+    - Add Client Secret to App registration
+    - Switch to new tenant. Moving to Azure AD B2C -> App registrations. Select the registration that was created automatically, and select API permissions.
+    - Approval grants for all permits.
+    - Fill values in ```terraform.tfvars```
 
 3. Run ```main.ft```
 
@@ -25,9 +30,9 @@
     - ```terraform output secrets```
 
 5. Create service principal for github actions and save response:
-   - ```az ad sp create-for-rbac --name "heorhi_utseuski_github_actions" --json-auth```
-   
-   _response should be view like this:_ 
+    - ```az ad sp create-for-rbac --name "heorhi_utseuski_github_actions" --json-auth```
+
+   _response should be view like this:_
     ```json5
     {
         "clientId":"<client_id>",
@@ -35,7 +40,7 @@
         "subscriptionId":"<subscription_id>",
         "tenantId":"<tenant_id>"
     }
-```
+    ```
 
 5. Add roles to resources:
     - ```az role assignment create --assignee <client_id> --role "Container Apps Contributor" --scope /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>```
@@ -55,3 +60,5 @@
    - ```AZURE_CREDENTIALS```
 
 8. In GitHub, run the "Build and Deploy Selected Module" workflow with the current branch and all modules selected.
+
+9. Add Redirect URI to App registration: type=Web; value=<petstorepetapp.ingress[0].fqdn>/login/oauth2/code/

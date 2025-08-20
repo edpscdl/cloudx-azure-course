@@ -3,24 +3,12 @@ module "petStoreNaming" {
   suffix = ["ps"]
 }
 
-# module "resourceGroup" {
-#   source = "./modules/resourceGroup"
-#
-#   # name     = module.petStoreNaming.resource_group.name_unique
-#   name     = var.main_resource_group_name
-#   location = "centralus"
-#
-#   depends_on = [
-#     module.petStoreNaming
-#   ]
-# }
-
 data "azurerm_resource_group" "petStoreResourceGroup" {
   name = var.main_resource_group_name
 }
 
 module "petStoreUserAssignedIdentity" {
-  source = "./modules/azurerm/rmUserAssignedIdentity"
+  source = "modules/userAssignedIdentity"
 
   name                = module.petStoreNaming.user_assigned_identity.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -32,7 +20,7 @@ module "petStoreUserAssignedIdentity" {
 }
 
 module "petStoreKeyVault" {
-  source = "./modules/azurerm/rmKeyVault"
+  source = "modules/keyVault"
 
   name                = module.petStoreNaming.key_vault.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -47,7 +35,7 @@ module "petStoreKeyVault" {
 }
 
 module "petStoreLogAnalyticsWorkspace" {
-  source = "./modules/azurerm/rmLogAnalyticsWorkspace"
+  source = "modules/logAnalyticsWorkspace"
 
   name                = module.petStoreNaming.log_analytics_workspace.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -62,7 +50,7 @@ module "petStoreLogAnalyticsWorkspace" {
 }
 
 module "petStoreApplicationInsights" {
-  source = "./modules/azurerm/rmApplicationInsights"
+  source = "modules/applicationInsights"
 
   name                = module.petStoreNaming.application_insights.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -79,7 +67,7 @@ module "petStoreApplicationInsights" {
 }
 
 module "petStoreCosmosDb" {
-  source = "./modules/azurerm/rmCosmosDbAccount"
+  source = "modules/cosmosDbAccount"
 
   name                = module.petStoreNaming.cosmosdb_account.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -98,7 +86,7 @@ module "petStoreCosmosDb" {
 }
 
 module "petStoreContainerRegistry" {
-  source = "./modules/azurerm/rmContainerRegistry"
+  source = "modules/containerRegistry"
 
   name                = module.petStoreNaming.container_registry.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -116,7 +104,7 @@ module "petStoreContainerRegistry" {
 }
 
 module "petStoreContainerAppEnvironment" {
-  source = "./modules/azurerm/rmContainerAppEnvironment"
+  source = "modules/containerAppEnvironment"
 
   name                = module.petStoreNaming.container_app_environment.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -131,7 +119,7 @@ module "petStoreContainerAppEnvironment" {
 }
 
 module "petStoreServicePlan" {
-  source = "./modules/azurerm/rmAppServicePlan"
+  source = "modules/appServicePlan"
 
   name                = module.petStoreNaming.app_service_plan.name_unique
   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -143,7 +131,7 @@ module "petStoreServicePlan" {
 }
 
 module "petStoreStorageAccount" {
-  source = "./modules/azurerm/rmStorageAccount"
+  source = "modules/storageAccount"
 
   name                = module.petStoreNaming.storage_account.name_unique
   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -160,7 +148,7 @@ module "petStoreStorageAccount" {
 }
 
 module "petStoreServiceBus" {
-  source = "./modules/azurerm/rmServiceBus"
+  source = "modules/serviceBus"
 
   name                = module.petStoreNaming.storage_account.name_unique
   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -178,7 +166,7 @@ module "petStoreServiceBus" {
 }
 
 module "petStoreFunctionAppPetStoreOrderReserver" {
-  source = "./modules/azurerm/rmFunctionApp"
+  source = "modules/functionApp"
 
   name                                               = module.petStoreNaming.function_app.name_unique
   resource_group_name                                = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -209,7 +197,7 @@ module "petStoreFunctionAppPetStoreOrderReserver" {
 }
 
 module "petStoreContainerAppPetStoreApp" {
-  source = "./modules/azurerm/rmContainerApp"
+  source = "modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_app["petstoreapp"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -229,14 +217,11 @@ module "petStoreContainerAppPetStoreApp" {
       PETSTORE_SECURITY_ENABLED : true
       PETSTOREAPP_B2C_ENABLED : true
       PETSTORE_B2C_BASE_URI : "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/"
-      PETSTORE_B2C_CLIENT_ID : module.b2cApplication.client_id
-      PETSTORE_B2C_CLIENT_SECRET : module.b2cApplication.client_secret
-      # PETSTORE_B2C_LOGOUT_SUCCESS_URL: "https://${module.petStoreNaming.container_app.name}-${local.list_web_app["petstoreapp"]}.${module.petStoreContainerAppEnvironment.default_domain}/"
-      # PETSTORE_B2C_REPLY_URL: "https://${module.petStoreNaming.container_app.name}-${local.list_web_app["petstoreapp"]}.${module.petStoreContainerAppEnvironment.default_domain}/login/oauth2/code/"
+      PETSTORE_B2C_CLIENT_ID : var.b2c_client_id
+      PETSTORE_B2C_CLIENT_SECRET : var.b2c_client_secret
       PETSTORE_B2C_USERFLOW_SIGNUP_SIGNIN : var.b2c_user_flow_signup_or_signin_name
       PETSTORE_B2C_USERFLOW_PASSWORD_RESET : var.b2c_user_flow_password_reset_name
       PETSTORE_B2C_USERFLOW_PROFILE_EDITING : var.b2c_user_flow_profile_editing_name
-      # PETSTORE_B2C_REPLY_URL: "https://${var.b2c_application_name}.b2clogin.com/${var.b2c_application_name}.onmicrosoft.com/login/oauth2/code/"
     }
   )
 
@@ -249,13 +234,12 @@ module "petStoreContainerAppPetStoreApp" {
     module.petStoreUserAssignedIdentity,
     module.petStoreContainerAppPetStoreOrderService,
     module.petStoreContainerAppPetstorePetService,
-    module.petStoreContainerAppPetStoreProductService,
-    module.b2cApplication
+    module.petStoreContainerAppPetStoreProductService
   ]
 }
 
 module "petStoreContainerAppPetStoreOrderService" {
-  source = "./modules/azurerm/rmContainerApp"
+  source = "modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstoreorderservice"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -285,7 +269,7 @@ module "petStoreContainerAppPetStoreOrderService" {
 }
 
 module "petStoreContainerAppPetstorePetService" {
-  source = "./modules/azurerm/rmContainerApp"
+  source = "modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstorepetservice"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -312,7 +296,7 @@ module "petStoreContainerAppPetstorePetService" {
 }
 
 module "petStoreContainerAppPetStoreProductService" {
-  source = "./modules/azurerm/rmContainerApp"
+  source = "modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstoreproductservice"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -339,7 +323,7 @@ module "petStoreContainerAppPetStoreProductService" {
 }
 
 module "petStorePostgresql" {
-  source = "./modules/azurerm/rmPostgresqlFlexibleServer"
+  source = "modules/postgresqlFlexibleServer"
 
   name                = module.petStoreNaming.postgresql_database.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -359,24 +343,5 @@ module "petStorePostgresql" {
     module.petStoreKeyVault,
     module.petStoreContainerAppPetstorePetService,
     module.petStoreContainerAppPetStoreProductService
-  ]
-}
-
-module "b2cApplication" {
-  source = "./modules/azuread/adApplication"
-
-  applicationPasswordDisplayName = "rbac_b2c"
-  applicationRegistrationDisplayName = var.b2c_application_name
-}
-
-module "b2cApplicationRedirectionUris" {
-  source = "./modules/azuread/adRedirectUris"
-
-  applicationRegistrationId = module.b2cApplication.application_registration_id
-  redirectUris = ["${module.petStoreContainerAppPetStoreApp.url}/login/oauth2/code/"]
-
-  depends_on = [
-    module.b2cApplication,
-    module.petStoreContainerAppPetStoreApp
   ]
 }
