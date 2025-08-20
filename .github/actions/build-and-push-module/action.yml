@@ -40,3 +40,4 @@ runs:
         containerAppName: 'ca-ps-${{ inputs.module-name }}'
         resourceGroup: ${{ inputs.azure-resource-group }}
         imageToBuild: '${{ inputs.azure-acr-registry-name }}.azurecr.io/${{ inputs.module-name }}:${{ inputs.tag }}'
+        targetLabel: "dev"
