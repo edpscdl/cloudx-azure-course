@@ -8,7 +8,7 @@ data "azurerm_resource_group" "petStoreResourceGroup" {
 }
 
 module "petStoreUserAssignedIdentity" {
-  source = "modules/userAssignedIdentity"
+  source = "./modules/userAssignedIdentity"
 
   name                = module.petStoreNaming.user_assigned_identity.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -20,7 +20,7 @@ module "petStoreUserAssignedIdentity" {
 }
 
 module "petStoreKeyVault" {
-  source = "modules/keyVault"
+  source = "./modules/keyVault"
 
   name                = module.petStoreNaming.key_vault.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -35,7 +35,7 @@ module "petStoreKeyVault" {
 }
 
 module "petStoreLogAnalyticsWorkspace" {
-  source = "modules/logAnalyticsWorkspace"
+  source = "./modules/logAnalyticsWorkspace"
 
   name                = module.petStoreNaming.log_analytics_workspace.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -50,7 +50,7 @@ module "petStoreLogAnalyticsWorkspace" {
 }
 
 module "petStoreApplicationInsights" {
-  source = "modules/applicationInsights"
+  source = "./modules/applicationInsights"
 
   name                = module.petStoreNaming.application_insights.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -67,7 +67,7 @@ module "petStoreApplicationInsights" {
 }
 
 module "petStoreCosmosDb" {
-  source = "modules/cosmosDbAccount"
+  source = "./modules/cosmosDbAccount"
 
   name                = module.petStoreNaming.cosmosdb_account.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -86,7 +86,7 @@ module "petStoreCosmosDb" {
 }
 
 module "petStoreContainerRegistry" {
-  source = "modules/containerRegistry"
+  source = "./modules/containerRegistry"
 
   name                = module.petStoreNaming.container_registry.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -104,7 +104,7 @@ module "petStoreContainerRegistry" {
 }
 
 module "petStoreContainerAppEnvironment" {
-  source = "modules/containerAppEnvironment"
+  source = "./modules/containerAppEnvironment"
 
   name                = module.petStoreNaming.container_app_environment.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -119,7 +119,7 @@ module "petStoreContainerAppEnvironment" {
 }
 
 module "petStoreServicePlan" {
-  source = "modules/appServicePlan"
+  source = "./modules/appServicePlan"
 
   name                = module.petStoreNaming.app_service_plan.name_unique
   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -131,7 +131,7 @@ module "petStoreServicePlan" {
 }
 
 module "petStoreStorageAccount" {
-  source = "modules/storageAccount"
+  source = "./modules/storageAccount"
 
   name                = module.petStoreNaming.storage_account.name_unique
   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -148,7 +148,7 @@ module "petStoreStorageAccount" {
 }
 
 module "petStoreServiceBus" {
-  source = "modules/serviceBus"
+  source = "./modules/serviceBus"
 
   name                = module.petStoreNaming.storage_account.name_unique
   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -166,7 +166,7 @@ module "petStoreServiceBus" {
 }
 
 module "petStoreFunctionAppPetStoreOrderReserver" {
-  source = "modules/functionApp"
+  source = "./modules/functionApp"
 
   name                                               = module.petStoreNaming.function_app.name_unique
   resource_group_name                                = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -197,7 +197,7 @@ module "petStoreFunctionAppPetStoreOrderReserver" {
 }
 
 module "petStoreContainerAppPetStoreApp" {
-  source = "modules/containerApp"
+  source = "./modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_app["petstoreapp"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -239,7 +239,7 @@ module "petStoreContainerAppPetStoreApp" {
 }
 
 module "petStoreContainerAppPetStoreOrderService" {
-  source = "modules/containerApp"
+  source = "./modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstoreorderservice"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -269,7 +269,7 @@ module "petStoreContainerAppPetStoreOrderService" {
 }
 
 module "petStoreContainerAppPetstorePetService" {
-  source = "modules/containerApp"
+  source = "./modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstorepetservice"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -296,7 +296,7 @@ module "petStoreContainerAppPetstorePetService" {
 }
 
 module "petStoreContainerAppPetStoreProductService" {
-  source = "modules/containerApp"
+  source = "./modules/containerApp"
 
   name                         = "${module.petStoreNaming.container_app.name}-${local.list_web_services["petstoreproductservice"]}"
   resource_group_name          = data.azurerm_resource_group.petStoreResourceGroup.name
@@ -323,7 +323,7 @@ module "petStoreContainerAppPetStoreProductService" {
 }
 
 module "petStorePostgresql" {
-  source = "modules/postgresqlFlexibleServer"
+  source = "./modules/postgresqlFlexibleServer"
 
   name                = module.petStoreNaming.postgresql_database.name_unique
   location            = data.azurerm_resource_group.petStoreResourceGroup.location
@@ -345,3 +345,14 @@ module "petStorePostgresql" {
     module.petStoreContainerAppPetStoreProductService
   ]
 }
+
+# module "petStoreLogicApp" {
+#   source = "./modules/logicApp"
+#
+#   name = module.petStoreNaming.logic_app_workflow.name_unique
+#   location            = data.azurerm_resource_group.petStoreResourceGroup.location
+#   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
+#   deployment_name = module.petStoreNaming.template_deployment.name_unique
+#   user_assigned_identity_id = module.petStoreUserAssignedIdentity.id
+#   arm_template_path = "./workflow.json"
+# }
