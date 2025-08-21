@@ -6,6 +6,7 @@ import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.OutputBinding;
 import com.microsoft.azure.functions.annotation.BlobInput;
 import com.microsoft.azure.functions.annotation.BlobOutput;
+import com.microsoft.azure.functions.annotation.FixedDelayRetry;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.ServiceBusQueueTrigger;
 import com.microsoft.azure.functions.annotation.StorageAccount;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class ServiceBusQueueTriggerJava {
     @FunctionName("OrderHistorySaveServiceBus")
     @StorageAccount("AzureWebJobsStorage")
+    @FixedDelayRetry(maxRetryCount = 3, delayInterval = "00:00:05")
     public void orderHistory(
             @ServiceBusQueueTrigger(
                     name = "order",
