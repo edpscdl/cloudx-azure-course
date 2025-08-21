@@ -62,3 +62,5 @@
 8. In GitHub, run the "Build and Deploy Selected Module" workflow with the current branch and all modules selected.
 
 9. Add Redirect URI to App registration: type=Web; value=<petstorepetapp.ingress[0].fqdn>/login/oauth2/code/
+
+10. Create workflow at Logic App using worlfkow.json
