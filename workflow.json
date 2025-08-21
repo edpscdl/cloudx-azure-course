@@ -1,141 +1,72 @@
 {
   "definition": {
     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-    "actions": {
-      "Parse_JSON": {
-        "type": "ParseJson",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "When_a_message_is_received_in_a_queue_(auto-complete)": {
+        "type": "ApiConnection",
         "inputs": {
-          "content": "@outputs('Compose')",
-          "schema": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "email": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "products": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
-                    "quantity": {
-                      "type": "integer"
-                    },
-                    "name": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "photoURL": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "quantity"
-                  ]
-                }
-              },
-              "status": {
-                "type": "string"
-              },
-              "complete": {
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "id",
-              "products",
-              "status",
-              "complete"
-            ]
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['servicebus-1']['connectionId']"
+            }
+          },
+          "method": "get",
+          "path": "/@{encodeURIComponent(encodeURIComponent('order_history_queue'))}/messages/head",
+          "queries": {
+            "queueType": "DeadLetter"
           }
         },
-        "runAfter": {
-          "Compose": [
-            "SUCCEEDED"
-          ]
+        "recurrence": {
+          "interval": 1,
+          "frequency": "Minute"
         }
-      },
-      "Compose": {
-        "type": "Compose",
-        "inputs": "@json(triggerBody()['contentData'])",
-        "runAfter": {}
-      },
+      }
+    },
+    "actions": {
       "Send_an_email_(V2)": {
         "type": "ApiConnection",
         "inputs": {
           "host": {
             "connection": {
-              "referenceName": "outlook"
+              "name": "@parameters('$connections')['outlook']['connectionId']"
             }
           },
           "method": "post",
           "body": {
-            "To": "TEST_EMAIL@TEST.TEST",
-            "Subject": "[PET STORE] @{body('Parse_JSON')['id']}",
-            "Body": "<p class=\"editor-paragraph\">@{body('Parse_JSON')}</p>",
+            "To": "testremote@mailinator.com",
+            "Subject": "Error",
+            "Body": "<p class=\"editor-paragraph\">@{base64ToString(triggerBody()?['ContentData'])}</p>",
             "Importance": "Normal"
           },
           "path": "/v2/Mail"
         },
-        "runAfter": {
-          "Parse_JSON": [
-            "SUCCEEDED"
-          ]
-        }
-      },
-      "Complete_the_message_in_a_queue": {
-        "type": "ServiceProvider",
-        "inputs": {
-          "parameters": {
-            "queueName": "order_history_queue/$DeadLetterQueue",
-            "lockToken": "@triggerOutputs()['body']['lockToken']"
-          },
-          "serviceProviderConfiguration": {
-            "connectionName": "serviceBus",
-            "operationId": "completeQueueMessageV2",
-            "serviceProviderId": "/serviceProviders/serviceBus"
-          }
-        },
-        "runAfter": {
-          "Send_an_email_(V2)": [
-            "SUCCEEDED"
-          ]
-        }
+        "runAfter": {}
       }
     },
-    "contentVersion": "1.0.0.0",
     "outputs": {},
-    "triggers": {
-      "When_messages_are_available_in_a_queue_(peek-lock)": {
-        "type": "ServiceProvider",
-        "inputs": {
-          "parameters": {
-            "queueName": "order_history_queue/$DeadLetterQueue"
-          },
-          "serviceProviderConfiguration": {
-            "connectionName": "serviceBus",
-            "operationId": "peekLockQueueMessagesV2",
-            "serviceProviderId": "/serviceProviders/serviceBus"
-          }
-        },
-        "splitOn": "@triggerOutputs()?['body']"
+    "parameters": {
+      "$connections": {
+        "type": "Object",
+        "defaultValue": {}
       }
     }
   },
-  "kind": "Stateful"
+  "parameters": {
+    "$connections": {
+      "type": "Object",
+      "value": {
+        "servicebus-1": {
+          "id": "/subscriptions/<subscription_id>/providers/Microsoft.Web/locations/centralus/managedApis/servicebus",
+          "connectionId": "/subscriptions/<subscription_id>/resourceGroups/<resource_group_name/providers/Microsoft.Web/connections/servicebus",
+          "connectionName": "servicebus-2"
+        },
+        "outlook": {
+          "id": "/subscriptions/<subscription_id>/providers/Microsoft.Web/locations/centralus/managedApis/outlook",
+          "connectionId": "/subscriptions/<subscription_id>/resourceGroups/<resource_group_name/providers/Microsoft.Web/connections/outlook",
+          "connectionName": "outlook"
+        }
+      }
+    }
+  }
 }
