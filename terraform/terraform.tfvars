@@ -3,7 +3,6 @@ main_resource_group_name = "<resource_group_name>"
 subscription_id = "<subscription_id>"
 tenant_id       = "<tenant_id>"
 
-b2c_tenant_id                       = "<b2c_tenant_id>"
 b2c_application_name                = "<b2c_application_name>"
 b2c_client_id                       = "<b2c_client_id>"
 b2c_client_secret                   = "<b2c_client_secret>"
