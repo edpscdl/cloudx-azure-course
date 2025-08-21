@@ -10,9 +10,9 @@ variable "tenant_id" {
   type = string
 }
 
-variable "b2c_tenant_id" {
-  type = string
-}
+# variable "b2c_tenant_id" {
+#   type = string
+# }
 
 variable "b2c_application_name" {
   type = string

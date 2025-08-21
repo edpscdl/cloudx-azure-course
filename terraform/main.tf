@@ -346,13 +346,11 @@ module "petStorePostgresql" {
   ]
 }
 
-# module "petStoreLogicApp" {
-#   source = "./modules/logicApp"
-#
-#   name = module.petStoreNaming.logic_app_workflow.name_unique
-#   location            = data.azurerm_resource_group.petStoreResourceGroup.location
-#   resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
-#   deployment_name = module.petStoreNaming.template_deployment.name_unique
-#   user_assigned_identity_id = module.petStoreUserAssignedIdentity.id
-#   arm_template_path = "./workflow.json"
-# }
+module "petStoreLogicApp" {
+  source = "./modules/logicApp"
+
+  name = module.petStoreNaming.logic_app_workflow.name_unique
+  location            = data.azurerm_resource_group.petStoreResourceGroup.location
+  resource_group_name = data.azurerm_resource_group.petStoreResourceGroup.name
+  user_assigned_identity_id = module.petStoreUserAssignedIdentity.id
+}

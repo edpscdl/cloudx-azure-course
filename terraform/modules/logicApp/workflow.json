@@ -1,0 +1,78 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "When_a_message_is_received_in_a_queue_(peek-lock)": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['servicebus']['connectionId']"
+            }
+          },
+          "method": "get",
+          "path": "/@{encodeURIComponent(encodeURIComponent('order_history_queue'))}/messages/head/peek",
+          "queries": {
+            "queueType": "DeadLetter",
+            "sessionId": "None"
+          }
+        },
+        "recurrence": {
+          "interval": 1,
+          "frequency": "Minute"
+        }
+      }
+    },
+    "actions": {
+      "Send_an_email_(V2)": {
+        "type": "ApiConnection",
+        "inputs": {
+          "host": {
+            "connection": {
+              "name": "@parameters('$connections')['outlook']['connectionId']"
+            }
+          },
+          "method": "post",
+          "body": {
+            "To": "@base64ToString(triggerBody()?['ContentData']).email",
+            "Subject": "Error",
+            "Body": "<p class=\"editor-paragraph\">@{base64ToString(triggerBody()?['ContentData'])}</p>",
+            "Importance": "Normal"
+          },
+          "path": "/v2/Mail"
+        },
+        "runAfter": {}
+      }
+    },
+    "parameters": {
+      "$connections": {
+        "type": "Object",
+        "defaultValue": {}
+      }
+    }
+  },
+  "parameters": {
+    "$connections": {
+      "type": "Object",
+      "value": {
+        "servicebus": {
+          "id": "/subscriptions/94f03752-527c-408a-ba36-97293458b28b/providers/Microsoft.Web/locations/centralus/managedApis/servicebus",
+          "connectionId": "/subscriptions/94f03752-527c-408a-ba36-97293458b28b/resourceGroups/petstoremodule11final/providers/Microsoft.Web/connections/servicebus",
+          "connectionName": "servicebus",
+          "connectionProperties": {
+            "authentication": {
+              "type": "ManagedServiceIdentity",
+              "identity": "/subscriptions/94f03752-527c-408a-ba36-97293458b28b/resourceGroups/petstoremodule11final/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-ps-dcfg"
+            }
+          }
+        },
+        "outlook": {
+          "id": "/subscriptions/94f03752-527c-408a-ba36-97293458b28b/providers/Microsoft.Web/locations/centralus/managedApis/outlook",
+          "connectionId": "/subscriptions/94f03752-527c-408a-ba36-97293458b28b/resourceGroups/petstoremodule11final/providers/Microsoft.Web/connections/outlook",
+          "connectionName": "outlook"
+        }
+      }
+    }
+  }
+}
